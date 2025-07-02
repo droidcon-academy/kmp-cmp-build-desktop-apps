@@ -1,5 +1,6 @@
 package com.droidcon.notedock.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -51,14 +53,20 @@ fun NoteEditorScreen(
                 value = title,
                 onValueChange = { title = it },
                 label = { Text("Title") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
             )
             Spacer(modifier = Modifier.height(8.dp))
             TextField(
                 value = content,
                 onValueChange = { content = it },
                 label = { Text("Content") },
-                modifier = Modifier.fillMaxWidth().weight(1f) // Makes it expandable
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f) // Makes it expandable
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {

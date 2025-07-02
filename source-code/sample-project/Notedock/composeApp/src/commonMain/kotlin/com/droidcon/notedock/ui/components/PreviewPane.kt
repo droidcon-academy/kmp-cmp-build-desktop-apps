@@ -2,6 +2,7 @@ package com.droidcon.notedock.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.TooltipArea
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,9 +38,9 @@ fun PreviewPane(
         note?.let {
             Column(Modifier
                 .fillMaxSize()
-            ) {
+                .background(MaterialTheme.colorScheme.secondaryContainer)
 
-                Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(8.dp))
+            ) {
 
                 TooltipArea(tooltip = {
                     Surface(modifier = Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
@@ -53,6 +54,8 @@ fun PreviewPane(
                         Icon(Icons.Outlined.Edit, contentDescription = "Edit Note")
                     }
                 }
+
+                Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(8.dp))
 
                 Box(Modifier.fillMaxWidth().padding(8.dp)) {
                     // Edit note button

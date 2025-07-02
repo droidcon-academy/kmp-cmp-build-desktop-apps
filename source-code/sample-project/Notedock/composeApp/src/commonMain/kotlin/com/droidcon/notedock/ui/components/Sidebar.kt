@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,12 +28,14 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarToday
-import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draganddrop.DragAndDropTransferAction
@@ -44,6 +45,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.AnnotatedString
@@ -53,6 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
+import com.droidcon.notedock.util.dashedBorder
 import java.awt.datatransfer.StringSelection
 
 //We put Sidebar under desktopMain because it requires desktop-specific APIs
@@ -72,6 +76,8 @@ fun Sidebar(
     Box (modifier){
         val listState = rememberLazyListState()
         val textMeasurer = rememberTextMeasurer()
+        var boxBorderSize by remember{ mutableStateOf(0.dp) }
+
         LazyColumn(
             contentPadding = PaddingValues(4.dp),
             modifier = Modifier.fillMaxSize()
@@ -85,7 +91,7 @@ fun Sidebar(
                         Text("Create a new note", Modifier.padding(4.dp))
                     }
                 }, delayMillis = 500){
-                    Button({onNewNote()}, modifier = Modifier.padding(8.dp)){
+                    Button({ onNewNote() }, modifier = Modifier.padding(8.dp)){
                         Icon(Icons.Outlined.Add, contentDescription = "Add")
                         Text("New Note")
                     }
@@ -98,7 +104,7 @@ fun Sidebar(
                         Text("Get a random joke from server", Modifier.padding(4.dp))
                     }
                 }, delayMillis = 500){
-                    Button({onOpenRandomJoke()}, modifier = Modifier.padding(8.dp)){
+                    Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)){
                         Icon(Icons.Outlined.CalendarToday, "Today")
                         Text("Random Joke", Modifier.padding(8.dp))
                     }
@@ -122,9 +128,15 @@ fun Sidebar(
 
                         })
                         .background(if (note.id == selectedNote?.id) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
+                        .dashedBorder(SolidColor(MaterialTheme.colorScheme.error), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
                         .padding(8.dp)
                         .onPointerEvent(PointerEventType.Enter){
-                            //TODO: Handle hover event
+                            boxBorderSize = 4.dp
+                            print("PointerEventType.Enter")
+                        }
+                        .onPointerEvent(PointerEventType.Exit){
+                            boxBorderSize = 0.dp
+                            print("PointerEventType.Exit")
                         }
                         .dragAndDropSource(
                             drawDragDecoration = {
@@ -161,6 +173,7 @@ fun Sidebar(
                                 }
                             )
                         }
+
                     ) {
                         Column {
                             Text(text = note.title, modifier = Modifier.padding(4.dp))

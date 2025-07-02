@@ -65,7 +65,7 @@ fun NotesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.tertiaryContainer, MaterialTheme.shapes.extraLarge)
+                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.extraLarge)
                 ,
                 onEditNote = onEditNote,
                 onShowMessage = {

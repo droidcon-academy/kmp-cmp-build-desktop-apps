@@ -25,7 +25,7 @@ import androidx.compose.runtime.getValue
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun MainNotesWindow(
-    openQuickNote: Boolean = false,
+    isQuickNoteWindowOpen: Boolean = false,
     onCloseQuickNote: () -> Unit,
     windowState: WindowState = rememberWindowState(),
     onCloseApp: () -> Unit
@@ -44,43 +44,43 @@ fun MainNotesWindow(
         title = "Notedock",
         onCloseRequest = onCloseApp
     ) {
-        val vm = viewModel { NoteViewModel(InMemoryNoteRepository()) }
+        val noteViewModel = viewModel { NoteViewModel(InMemoryNoteRepository()) }
 
 
-        val notes by vm.notes.collectAsState()
-        val selectedNote by vm.selectedNote.collectAsState()
+        val notes by noteViewModel.notes.collectAsState()
+        val selectedNote by noteViewModel.selectedNote.collectAsState()
 
-        var openJokeWindow by remember{mutableStateOf(false)}
-        var openEditorWindow by remember { mutableStateOf(false) }
+        var isJokeWindowOpen by remember{mutableStateOf(false)}
+        var isEditorWindowOpen by remember { mutableStateOf(false) }
 
 
-        if (openJokeWindow){
+        if (isJokeWindowOpen){
             JokeWindow(
                 title = "Joke of the day",
                 onCloseRequest = {
-                openJokeWindow = false
+                isJokeWindowOpen = false
             })
         }
 
-        if (openEditorWindow){
+        if (isEditorWindowOpen){
             NoteEditorWindow(
                 winTitle = selectedNote?.title ?: "New Note",
                 note = selectedNote,
                 onClose = {
-                   openEditorWindow = false
+                   isEditorWindowOpen = false
                 },
                 onSave = {
-                    vm.saveNote(it)
+                    noteViewModel.saveNote(it)
                     print("Inside MainNotesWindow. Saved ${it.id}, ${it.title}, ${it.content}")
                 }
             )
         }
 
-        if (openQuickNote){
+        if (isQuickNoteWindowOpen){
             QuickNoteWindow(
                 title = "Take a quick note",
                 onClose = { onCloseQuickNote() },
-                onSave = { title, content -> vm.createNewNote(title = title, content = content)}
+                onSave = { title, content -> noteViewModel.createNewNote(title = title, content = content)}
             )
         }
 
@@ -95,21 +95,21 @@ fun MainNotesWindow(
                 notes = notes,
                 selectedNote = selectedNote,
                 onNewNote = {
-                    openEditorWindow = true
-                    vm.selectNote(null)
+                    isEditorWindowOpen = true
+                    noteViewModel.selectNote(null)
                             },
                 onEditNote = {
-                    openEditorWindow = true
-                    vm.selectNote(it)
+                    isEditorWindowOpen = true
+                    noteViewModel.selectNote(it)
                              },
                 onDeleteNote = {
-                    vm.deleteNote(it)
+                    noteViewModel.deleteNote(it)
 
                                },
                 onOpenRandomJoke = {
-                    openJokeWindow = true
+                    isJokeWindowOpen = true
                                    },
-                onSelectNote = { vm.selectNote(it) }
+                onSelectNote = { noteViewModel.selectNote(it) }
             )
 
         }

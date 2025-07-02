@@ -14,12 +14,11 @@ import androidx.compose.ui.window.rememberWindowState
 import com.droidcon.notedock.ui.screens.MainNotesWindow
 import org.jetbrains.compose.resources.painterResource
 import notedock.composeapp.generated.resources.Res
-import notedock.composeapp.generated.resources.app_icon
 import notedock.composeapp.generated.resources.notedock_icon
 
 
 fun main() = application {
-    val winState = rememberWindowState()
+    val windowState = rememberWindowState()
     val trayState = rememberTrayState()
 //    Window (state = winState, onCloseRequest = ::exitApplication, title = "Note Dock", onKeyEvent = {
 //        Utils.handleKeyEvent(it)
@@ -44,12 +43,12 @@ fun main() = application {
     /**
      * Controls opening of Quick Note Window
      */
-    var openQuickNote by remember{ mutableStateOf(false) }
+    var isQuickNoteWindowOpen by remember{ mutableStateOf(false) }
 
     MainNotesWindow(
-        onCloseQuickNote = { openQuickNote = false},
-        openQuickNote = openQuickNote,
-        windowState = winState,
+        onCloseQuickNote = { isQuickNoteWindowOpen = false},
+        isQuickNoteWindowOpen = isQuickNoteWindowOpen,
+        windowState = windowState,
         onCloseApp = ::exitApplication
     )
 
@@ -58,7 +57,7 @@ fun main() = application {
         icon = painterResource(Res.drawable.notedock_icon), // We'll add this resource later
         menu = {
             Item("New Note") {
-                openQuickNote = true
+                isQuickNoteWindowOpen = true
             }
             Item("Sync") {
                 trayState.sendNotification(
