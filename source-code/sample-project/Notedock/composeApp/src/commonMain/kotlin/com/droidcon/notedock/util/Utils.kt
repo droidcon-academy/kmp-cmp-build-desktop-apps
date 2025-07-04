@@ -65,7 +65,57 @@ class Utils {
 
             return false
         }
+
+        /**
+         * Generates random sentences
+         */
+        fun generateRandomSentence(): String{
+            val subjects = listOf(
+                "We",
+                "Police",
+                "People",
+                "Developers",
+                "Countries"
+            )
+
+            val objects = listOf(
+                "buildings",
+                "books",
+                "computers",
+                "AI",
+                "technologies",
+                "Jetpack Compose"
+            )
+
+            val verbs = listOf(
+                "love",
+                "hate",
+                "destroy",
+                "program",
+                "fix",
+                "make"
+            )
+
+            val adverbs = listOf(
+                "foolishly",
+                "intelligently",
+                "quickly",
+                "lazily",
+                "slowly"
+            )
+
+            val adjectives = listOf(
+                "beautiful",
+                "big",
+                "small",
+                "lovely",
+                "ridiculous"
+            )
+
+            return subjects.random() + " " + adverbs.random() + " " + verbs.random() + " " + adjectives.random() + " " + objects.random()
+        }
     }
+
 }
 
 
@@ -96,3 +146,4 @@ fun Modifier.dashedBorder(
             brush = brush
         )
     }
+

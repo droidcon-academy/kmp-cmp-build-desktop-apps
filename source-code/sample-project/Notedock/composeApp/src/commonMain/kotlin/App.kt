@@ -51,7 +51,6 @@ fun NotesScreen(
                 notes = notes,
                 selectedNote = selectedNote,
                 onSelectNote = onSelectNote,
-                onNoteHover = {},
                 onNoteDelete = onDeleteNote,
                 onNewNote = onNewNote,
                 onOpenRandomJoke = { onOpenRandomJoke() },
@@ -67,10 +66,8 @@ fun NotesScreen(
                     .padding(8.dp)
                     .background(MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.extraLarge)
                 ,
-                onEditNote = onEditNote,
-                onShowMessage = {
-                scope.launch { snackBarHostState.showSnackbar(it) }
-            })
+                onEditNote = onEditNote
+            )
         }
 
     }

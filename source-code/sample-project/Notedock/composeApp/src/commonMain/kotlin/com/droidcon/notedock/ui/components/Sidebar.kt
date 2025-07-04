@@ -77,7 +77,6 @@ fun Sidebar(
     notes: List<Note>,
     selectedNote: Note?,
     onSelectNote: (Note?) -> Unit,
-    onNoteHover: (Note) -> Unit,
     onNoteDelete: (Int) -> Unit,
     onNewNote: () -> Unit,
     onOpenRandomJoke: () -> Unit,
@@ -127,7 +126,7 @@ fun Sidebar(
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small), contentColor = TooltipDefaults.plainTooltipContentColor, color = TooltipDefaults.plainTooltipContainerColor){
                         if (hoverOffset == index){
-                            Text("Drag to copy text to another window", Modifier.align(Alignment.Center).padding(8.dp), style = MaterialTheme.typography.titleSmall)
+                            Text(note.content, Modifier.align(Alignment.Center).padding(8.dp), style = MaterialTheme.typography.titleSmall)
                         }
                     }
                 }, delayMillis = 500) {
@@ -143,7 +142,7 @@ fun Sidebar(
                         .background(if (note.id == selectedNote?.id) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
                         .composed{
                             if (hoverOffset == index)
-                                dashedBorder(SolidColor(MaterialTheme.colorScheme.onTertiaryContainer), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
+                                dashedBorder(SolidColor(MaterialTheme.colorScheme.tertiary), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
                             else Modifier
                         }
                         .padding(8.dp)

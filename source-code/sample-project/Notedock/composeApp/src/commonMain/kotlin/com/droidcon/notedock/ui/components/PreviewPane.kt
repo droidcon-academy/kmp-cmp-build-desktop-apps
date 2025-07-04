@@ -31,6 +31,7 @@ import androidx.compose.ui.draganddrop.DragAndDropEvent
 import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
 import kotlinx.coroutines.delay
@@ -44,8 +45,7 @@ import java.awt.datatransfer.DataFlavor
 fun PreviewPane(
     note: Note?,
     onEditNote: (Note) -> Unit,
-    modifier: Modifier = Modifier,
-    onShowMessage: (String) -> Unit
+    modifier: Modifier = Modifier
 ){
 
     Column (modifier,
@@ -54,7 +54,6 @@ fun PreviewPane(
         note?.let {
             Column(Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer)
 
             ) {
 
@@ -72,13 +71,20 @@ fun PreviewPane(
                     }
                 }
 
-                Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.padding(8.dp))
+                Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier
+                    .padding(8.dp)
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    ,
+                    textAlign = TextAlign.Center
+                )
 
                 Box(Modifier.fillMaxWidth().padding(8.dp)) {
                     // Edit note button
                     Text(
                         note.content, modifier = Modifier
                             .padding(8.dp)
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+
                     )
                 }
             }

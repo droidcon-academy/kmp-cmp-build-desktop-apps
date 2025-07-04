@@ -3,6 +3,7 @@ package com.droidcon.notedock.repository
 import androidx.compose.runtime.mutableStateListOf
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.repository.NoteRepository
+import com.droidcon.notedock.util.Utils
 import kotlin.random.Random
 
 class InMemoryNoteRepository : NoteRepository {
@@ -17,7 +18,7 @@ class InMemoryNoteRepository : NoteRepository {
             repeat(5) { i ->
                 val id = i + 1 // Start IDs from 1
 //Create initial notes
-                val sentence = generateRandomSentence()
+                val sentence = Utils.generateRandomSentence()
                 val title = sentence.split(' ')[0]
                 notes.add(
                     Note(
@@ -29,39 +30,6 @@ class InMemoryNoteRepository : NoteRepository {
                 )
             }
         }
-    }
-
-    /**
-     * Generates random sentences
-     */
-    private fun generateRandomSentence(): String{
-        val subjects = listOf(
-            "We",
-            "Police",
-            "People",
-            "Developers",
-            "Countries"
-        )
-
-        val objects = listOf(
-            "buildings",
-            "books",
-            "computers",
-            "AI",
-            "technologies",
-            "Jetpack Compose"
-        )
-
-        val verbs = listOf(
-            "love",
-            "hate",
-            "destroy",
-            "program",
-            "fix",
-            "make"
-        )
-
-        return subjects.random() + " " + verbs.random() + " " + objects.random()
     }
 
 
