@@ -3,7 +3,6 @@
 package com.droidcon.notedock.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -20,7 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.v2.ScrollbarAdapter
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
@@ -35,12 +36,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draganddrop.DragAndDropEvent
+import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.DragAndDropTransferAction
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.draganddrop.DragAndDropTransferable
+import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -57,6 +64,9 @@ import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
 import com.droidcon.notedock.util.dashedBorder
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 
 //We put Sidebar under desktopMain because it requires desktop-specific APIs
@@ -77,6 +87,7 @@ fun Sidebar(
         val listState = rememberLazyListState()
         val textMeasurer = rememberTextMeasurer()
         var boxBorderSize by remember{ mutableStateOf(0.dp) }
+        var hoverOffset by remember { mutableStateOf(-1) }
 
         LazyColumn(
             contentPadding = PaddingValues(4.dp),
@@ -112,10 +123,12 @@ fun Sidebar(
             }
 
             item { Spacer(Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colorScheme.onSurfaceVariant)) }
-            items(items = notes) { note ->
+            itemsIndexed(items = notes, key = {index:Int, note:Note -> note.id}) { index, note ->
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small), contentColor = TooltipDefaults.plainTooltipContentColor, color = TooltipDefaults.plainTooltipContainerColor){
-                        Text(note.title, Modifier.padding(4.dp))
+                        if (hoverOffset == index){
+                            Text("Drag to copy text to another window", Modifier.align(Alignment.Center).padding(8.dp), style = MaterialTheme.typography.titleSmall)
+                        }
                     }
                 }, delayMillis = 500) {
                     Box(Modifier
@@ -128,15 +141,21 @@ fun Sidebar(
 
                         })
                         .background(if (note.id == selectedNote?.id) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
-                        .dashedBorder(SolidColor(MaterialTheme.colorScheme.error), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
+                        .composed{
+                            if (hoverOffset == index)
+                                dashedBorder(SolidColor(MaterialTheme.colorScheme.onTertiaryContainer), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
+                            else Modifier
+                        }
                         .padding(8.dp)
                         .onPointerEvent(PointerEventType.Enter){
                             boxBorderSize = 4.dp
                             print("PointerEventType.Enter")
+                            hoverOffset = index
                         }
                         .onPointerEvent(PointerEventType.Exit){
                             boxBorderSize = 0.dp
                             print("PointerEventType.Exit")
+                            hoverOffset = -1
                         }
                         .dragAndDropSource(
                             drawDragDecoration = {
@@ -153,7 +172,7 @@ fun Sidebar(
 
                                 drawText(
                                     textLayoutResult = textLayoutResult,
-                                    topLeft = Offset(size.width - 50, size.height - textLayoutResult.size.height/2)
+                                    topLeft = Offset(20f, 20f)
                                 )
 
                             }
@@ -185,8 +204,19 @@ fun Sidebar(
                 }
             }
         }
-        VerticalScrollbar(adapter = ScrollbarAdapter(listState),
-//            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
-        )
+//        VerticalScrollbar(adapter = object: ScrollbarAdapter{
+//            override val scrollOffset: Double
+//                get() = TODO("Not yet implemented")
+//            override val contentSize: Double
+//                get() = TODO("Not yet implemented")
+//            override val viewportSize: Double
+//                get() = TODO("Not yet implemented")
+//
+//            override suspend fun scrollTo(scrollOffset: Double) {
+//                TODO("Not yet implemented")
+//            }
+//        },
+////            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
+//        )
     }
 }

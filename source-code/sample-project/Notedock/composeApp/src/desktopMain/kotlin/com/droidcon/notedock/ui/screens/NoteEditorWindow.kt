@@ -16,23 +16,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.DragAndDropEvent
+import androidx.compose.ui.draganddrop.DragAndDropTarget
+import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.ui.components.NoteEditorScreen
 import com.droidcon.notedock.util.Utils
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.awt.datatransfer.DataFlavor
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NoteEditorWindow(
     winTitle: String,
     note: Note?, onClose: () -> Unit,
     onSave: (Note) -> Unit,
 ) {
-
-
-
     Window(
         title = winTitle,
         onCloseRequest = onClose) {

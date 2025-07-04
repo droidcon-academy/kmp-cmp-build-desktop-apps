@@ -41,7 +41,7 @@ fun MainNotesWindow(
 
     Window(
         state = windowState,
-        title = "Notedock",
+        title = "Notedock Note Keeper",
         onCloseRequest = onCloseApp
     ) {
         val noteViewModel = viewModel { NoteViewModel(InMemoryNoteRepository()) }

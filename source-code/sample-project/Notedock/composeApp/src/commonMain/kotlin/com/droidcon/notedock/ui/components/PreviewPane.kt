@@ -3,6 +3,8 @@ package com.droidcon.notedock.ui.components
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.background
+import androidx.compose.foundation.draganddrop.dragAndDropTarget
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,15 +19,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draganddrop.DragAndDropEvent
+import androidx.compose.ui.draganddrop.DragAndDropTarget
+import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.awt.datatransfer.DataFlavor
 
 
 // We are
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PreviewPane(
     note: Note?,
@@ -34,7 +48,9 @@ fun PreviewPane(
     onShowMessage: (String) -> Unit
 ){
 
-    Column (modifier) {
+    Column (modifier,
+        verticalArrangement = Arrangement.Center
+        ) {
         note?.let {
             Column(Modifier
                 .fillMaxSize()
@@ -50,7 +66,8 @@ fun PreviewPane(
 
                     IconButton(onClick = {
                         onEditNote(note)
-                    }) {
+                    }, modifier = Modifier.padding(8.dp).align(Alignment.Start)
+                        ) {
                         Icon(Icons.Outlined.Edit, contentDescription = "Edit Note")
                     }
                 }
