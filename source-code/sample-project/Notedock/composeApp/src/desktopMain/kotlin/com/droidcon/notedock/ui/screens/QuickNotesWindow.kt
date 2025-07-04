@@ -1,5 +1,6 @@
 package com.droidcon.notedock.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,18 +44,22 @@ fun QuickNoteWindow(
                     onValueChange = { title = it },
                     placeholder = { Text("Note Title", Modifier.padding(8.dp)) },
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f).padding(8.dp)
+                        .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
+
                 )
 
                 TextField(
                     value = content,
                     onValueChange = { content = it },
-                    placeholder = { Text("Note content ... ", Modifier.padding(8.dp))},
+                    placeholder = { Text("Note content ... ", Modifier.padding(8.dp)) },
                     modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f).padding(8.dp)
-                    )
+                        .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
+
+                )
 
                 Button({
                     onSave(title, content)
-                }){
+                }) {
                     Icon(Icons.Outlined.Save, "Save", modifier = Modifier.padding(2.dp))
                     Text("Save", Modifier.padding(8.dp))
 

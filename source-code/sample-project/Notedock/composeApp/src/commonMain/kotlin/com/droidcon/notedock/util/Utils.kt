@@ -18,20 +18,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/**
- * Specifies a Windows's status i.e. open or exit
- */
-enum class WinStatus {
-    Open,
-    Exit
-}
-
-enum class AppWindow{
-    EditorWindow,
-    QuickNoteWindow,
-    JokeWindow
-}
-
 
 fun convertTimestampToDateString(timestampMillis: Long, pattern: String): String {
     val date = Date(timestampMillis)
@@ -47,7 +33,7 @@ class Utils {
             when (event.key) {
                 Key.C -> {
                     if (event.isCtrlPressed) {
-                        print("Ctrl + C Pressed\n")
+                        println("Ctrl + C Pressed\n")
                         true
                     }
                     false
@@ -55,10 +41,12 @@ class Utils {
 
                 Key.A -> {
                     if (event.isCtrlPressed) {
-                        print("Ctrl + A Pressed")
+                        println("Ctrl + A Pressed")
                         true
                     }
                 }
+
+
 
                 else -> false
             }

@@ -33,7 +33,10 @@ fun NotesScreen(
     onEditNote: (Note) -> Unit,
     onDeleteNote: (Int) -> Unit,
     onOpenRandomJoke: () -> Unit,
-    onSelectNote: (Note?) -> Unit // Callback for selecting/deselecting a note in the list
+    onSelectNote: (Note?) -> Unit, // Callback for selecting/deselecting a note in the list
+    onSelectPrevNote: (Note) -> Unit,
+    onSelectNextNote: (Note) -> Unit
+
 ) {
     //Used for showing Snackbar messages
     val snackBarHostState = remember { SnackbarHostState() }
@@ -56,7 +59,9 @@ fun NotesScreen(
                 onOpenRandomJoke = { onOpenRandomJoke() },
                 onShowMessage = {
                    scope.launch { snackBarHostState.showSnackbar(it) }
-                }
+                },
+                onSelectPrevNote = onSelectPrevNote,
+                onSelectNextNote = onSelectNextNote
             )
 
             // Note Preview Pane

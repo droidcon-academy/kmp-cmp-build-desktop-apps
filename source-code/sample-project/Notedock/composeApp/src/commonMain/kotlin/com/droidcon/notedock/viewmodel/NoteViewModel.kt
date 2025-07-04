@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.repository.NoteRepository
-import com.droidcon.notedock.util.AppWindow
-import com.droidcon.notedock.util.WinStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -79,6 +77,25 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Selects the note previous to this note.
+     * If the selected note is the first in the list, no action will be taken
+     */
+    fun selectPrevNote(note: Note) {
+        var selectedIndex = -1
+        _notes.value.onEachIndexed { index,_note-> if (_note.id == note.id) selectedIndex = index}
+        if (selectedIndex >= 1) selectNote(_notes.value[selectedIndex - 1])
+    }
+
+    /**
+     * Selects the note after this note.
+     * If the current selected note is the last in the list, no action will be taken
+     */
+    fun selectNextNote(note: Note) {
+        var selectedIndex = -1
+        _notes.value.onEachIndexed { index, _note -> if (_note.id == note.id) selectedIndex = index }
+        if (selectedIndex < _notes.value.size - 1) selectNote(_notes.value[selectedIndex - 1])
+    }
 
 
 }

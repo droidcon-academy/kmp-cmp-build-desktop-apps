@@ -109,7 +109,9 @@ fun MainNotesWindow(
                 onOpenRandomJoke = {
                     isJokeWindowOpen = true
                                    },
-                onSelectNote = { noteViewModel.selectNote(it) }
+                onSelectNote = { noteViewModel.selectNote(it) },
+                onSelectPrevNote = {note-> noteViewModel.selectPrevNote(note)},
+                onSelectNextNote = {note-> noteViewModel.selectNextNote(note) }
             )
 
         }

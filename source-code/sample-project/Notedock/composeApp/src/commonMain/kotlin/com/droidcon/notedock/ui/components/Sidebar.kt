@@ -54,6 +54,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.AnnotatedString
@@ -66,6 +70,7 @@ import com.droidcon.notedock.util.convertTimestampToDateString
 import com.droidcon.notedock.util.dashedBorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 
@@ -80,7 +85,9 @@ fun Sidebar(
     onNoteDelete: (Int) -> Unit,
     onNewNote: () -> Unit,
     onOpenRandomJoke: () -> Unit,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onSelectPrevNote: (Note) -> Unit,
+    onSelectNextNote: (Note) -> Unit
     ){
     Box (modifier){
         val listState = rememberLazyListState()
@@ -191,6 +198,24 @@ fun Sidebar(
                                 }
                             )
                         }
+                        .onKeyEvent{event->
+                            // Select next and previous notes
+                            selectedNote?.let {
+                                when (event.key) {
+                                    Key.DirectionUp -> {
+                                        onSelectPrevNote(selectedNote); true
+                                    }
+
+                                    Key.DirectionDown -> {
+                                        onSelectNextNote(selectedNote); true
+                                    }
+
+                                    else -> false
+                                }
+                            }
+                            false
+                        }
+                        //TODO: Blur item content and show drag hint
 
                     ) {
                         Column {
