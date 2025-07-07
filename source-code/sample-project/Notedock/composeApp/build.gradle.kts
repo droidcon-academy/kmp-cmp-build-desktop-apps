@@ -50,7 +50,7 @@ compose.desktop {
         mainClass = "com.droidcon.notedock.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Rpm)
             packageName = "NoteDock"
             packageVersion = "1.0.0"
             macOS {
