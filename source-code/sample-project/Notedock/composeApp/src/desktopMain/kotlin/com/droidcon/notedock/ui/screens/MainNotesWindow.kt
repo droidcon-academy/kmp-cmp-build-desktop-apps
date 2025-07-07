@@ -20,6 +20,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import NotesScreen
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.window.Notification
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -28,7 +29,8 @@ fun MainNotesWindow(
     isQuickNoteWindowOpen: Boolean = false,
     onCloseQuickNote: () -> Unit,
     windowState: WindowState = rememberWindowState(),
-    onCloseApp: () -> Unit
+    onCloseApp: () -> Unit,
+    onShowNotification: (Notification) -> Unit
 ) {
 
 //    val listState = rememberLazyListState()
@@ -111,7 +113,8 @@ fun MainNotesWindow(
                                    },
                 onSelectNote = { noteViewModel.selectNote(it) },
                 onSelectPrevNote = {note-> noteViewModel.selectPrevNote()},
-                onSelectNextNote = {note-> noteViewModel.selectNextNote() }
+                onSelectNextNote = {note-> noteViewModel.selectNextNote() },
+                onShowNotification = onShowNotification
             )
 
         }

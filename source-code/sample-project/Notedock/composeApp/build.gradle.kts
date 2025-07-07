@@ -51,7 +51,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.droidcon.notedock"
+            packageName = "NoteDock"
             packageVersion = "1.0.0"
             macOS {
                 iconFile.set(project.file("src/desktopMain/composeResources/drawable/app_icon.icns")) // If you have an ICNS icon

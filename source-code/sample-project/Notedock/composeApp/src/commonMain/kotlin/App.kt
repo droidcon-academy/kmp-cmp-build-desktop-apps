@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Notification
 import com.droidcon.notedock.model.Note
 
 import com.droidcon.notedock.ui.components.PreviewPane
@@ -35,7 +36,8 @@ fun NotesScreen(
     onOpenRandomJoke: () -> Unit,
     onSelectNote: (Note?) -> Unit, // Callback for selecting/deselecting a note in the list
     onSelectPrevNote: (Note) -> Unit,
-    onSelectNextNote: (Note) -> Unit
+    onSelectNextNote: (Note) -> Unit,
+    onShowNotification: (Notification) -> Unit
 
 ) {
     //Used for showing Snackbar messages
@@ -61,7 +63,8 @@ fun NotesScreen(
                    scope.launch { snackBarHostState.showSnackbar(it) }
                 },
                 onSelectPrevNote = onSelectPrevNote,
-                onSelectNextNote = onSelectNextNote
+                onSelectNextNote = onSelectNextNote,
+                onShowNotification = onShowNotification
             )
 
             // Note Preview Pane

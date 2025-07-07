@@ -29,6 +29,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarToday
+import androidx.compose.material.icons.outlined.CloudSync
+import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TooltipDefaults
@@ -67,6 +69,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Notification
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
 import com.droidcon.notedock.util.dashedBorder
@@ -89,7 +92,8 @@ fun Sidebar(
     onOpenRandomJoke: () -> Unit,
     onShowMessage: (String) -> Unit,
     onSelectPrevNote: (Note) -> Unit,
-    onSelectNextNote: (Note) -> Unit
+    onSelectNextNote: (Note) -> Unit,
+    onShowNotification: (Notification) -> Unit
     ){
     Box (modifier){
         val listState = rememberLazyListState()
@@ -130,6 +134,19 @@ fun Sidebar(
                 }
             }
 
+            item {
+                TooltipArea(tooltip = {
+                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
+                        Text("Sync notes with the server", Modifier.padding(4.dp))
+                    }
+                }, delayMillis = 500){
+                    Button({ onShowNotification(Notification("Sync", "Sync Successful", Notification.Type.Info)) }, modifier = Modifier.padding(8.dp)){
+                        Icon(Icons.Outlined.CloudSync, "Cloud Sync")
+                        Text("Sync Notes", Modifier.padding(8.dp))
+                    }
+                }
+            }
+
             item { Spacer(Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colorScheme.onSurfaceVariant)) }
             itemsIndexed(items = notes, key = {index:Int, note:Note -> note.id}) { index, note ->
                 TooltipArea(tooltip = {
@@ -148,10 +165,10 @@ fun Sidebar(
                             else onSelectNote(note)
 
                         })
-                        .background(if (note.id == selectedNote?.id) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
+                        .background(if (note.id == selectedNote?.id) Color.DarkGray else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
                         .composed{
                             if (hoverOffset == index)
-                                dashedBorder(SolidColor(MaterialTheme.colorScheme.tertiary), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
+                                dashedBorder(SolidColor(MaterialTheme.colorScheme.onTertiary), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
                             else Modifier
                         }
                         .padding(8.dp)
@@ -169,7 +186,7 @@ fun Sidebar(
                             drawDragDecoration = {
                                 drawRect(
                                     color = Color.Gray,
-                                    topLeft = Offset(0f, size.height),
+                                    topLeft = Offset(0f, 0f),
                                     size = Size(size.width, size.height)
                                 )
                                 val textLayoutResult = textMeasurer.measure(
@@ -200,7 +217,7 @@ fun Sidebar(
                                 }
                             )
                         }
-                        .onKeyEvent{event->
+                        .onKeyEvent{event-> //Handles note selection with up/down keys
 
                            if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
                                 selectedNote?.let {
