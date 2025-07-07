@@ -29,31 +29,6 @@ fun convertTimestampToDateString(timestampMillis: Long, pattern: String): String
 
 class Utils {
     companion object {
-        fun handleKeyEvent(event: KeyEvent) : Boolean {
-            when (event.key) {
-                Key.C -> {
-                    if (event.isCtrlPressed) {
-                        println("Ctrl + C Pressed\n")
-                        true
-                    }
-                    false
-                }
-
-                Key.A -> {
-                    if (event.isCtrlPressed) {
-                        println("Ctrl + A Pressed")
-                        true
-                    }
-                }
-
-
-
-                else -> false
-            }
-
-            return false
-        }
-
         /**
          * Generates random sentences
          */

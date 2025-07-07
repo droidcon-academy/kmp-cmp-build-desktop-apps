@@ -20,26 +20,6 @@ import notedock.composeapp.generated.resources.notedock_icon
 fun main() = application {
     val windowState = rememberWindowState()
     val trayState = rememberTrayState()
-//    Window (state = winState, onCloseRequest = ::exitApplication, title = "Note Dock", onKeyEvent = {
-//        Utils.handleKeyEvent(it)
-//    }){
-//        val vm = viewModel { NoteViewModel(InMemoryNoteRepository()) }
-//        val notes by vm.notes.collectAsState()
-//        val selectedNote by vm.selectedNote.collectAsState()
-
-        // Initializing viewModel here because it's to be used in the platform-specific and common code
-/*        NotedockTheme {
-            NotedockApp(
-                viewModel = vm,
-                sidebar = {
-                    Sidebar(notes = notes, onNoteHover = {}, onNoteDelete = {}, onNoteSelect = {})
-                },
-                previewPane = {
-                    PreviewPane(selectedNote, onNoteEdit = {}, onJokeFetch = {})
-                }
-            )
-
-        }*/
     /**
      * Controls opening of Quick Note Window
      */

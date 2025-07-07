@@ -56,8 +56,10 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.AnnotatedString
@@ -146,7 +148,7 @@ fun Sidebar(
                             else onSelectNote(note)
 
                         })
-                        .background(if (note.id == selectedNote?.id) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
+                        .background(if (note.id == selectedNote?.id) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
                         .composed{
                             if (hoverOffset == index)
                                 dashedBorder(SolidColor(MaterialTheme.colorScheme.tertiary), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
@@ -199,21 +201,25 @@ fun Sidebar(
                             )
                         }
                         .onKeyEvent{event->
-                            // Select next and previous notes
-                            selectedNote?.let {
-                                when (event.key) {
-                                    Key.DirectionUp -> {
-                                        onSelectPrevNote(selectedNote); true
-                                    }
 
-                                    Key.DirectionDown -> {
-                                        onSelectNextNote(selectedNote); true
-                                    }
+                           if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
+                                selectedNote?.let {
+                                    val handled = when (event.key) {
+                                        Key.DirectionUp -> {
+                                            onSelectPrevNote(selectedNote); true
+                                        }
 
-                                    else -> false
+                                        Key.DirectionDown -> {
+                                            onSelectNextNote(selectedNote); true
+                                        }
+
+                                        else -> false
+                                    }
+                                    if (handled) return@onKeyEvent true
                                 }
+                                true // Important! Ensures the key event is not consumed multiple times
                             }
-                            false
+                            else false // If it's not a KeyDown, or selected note is null, or the key was not handled by us, propagate it
                         }
                         //TODO: Blur item content and show drag hint
 

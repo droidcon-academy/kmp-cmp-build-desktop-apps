@@ -81,20 +81,18 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
      * Selects the note previous to this note.
      * If the selected note is the first in the list, no action will be taken
      */
-    fun selectPrevNote(note: Note) {
-        var selectedIndex = -1
-        _notes.value.onEachIndexed { index,_note-> if (_note.id == note.id) selectedIndex = index}
-        if (selectedIndex >= 1) selectNote(_notes.value[selectedIndex - 1])
+    fun selectPrevNote() {
+        val selectedIndex = _notes.value.indexOfFirst { it.id == _selectedNote.value?.id }
+        if (selectedIndex > 0) selectNote(_notes.value[selectedIndex - 1])
     }
 
     /**
      * Selects the note after this note.
      * If the current selected note is the last in the list, no action will be taken
      */
-    fun selectNextNote(note: Note) {
-        var selectedIndex = -1
-        _notes.value.onEachIndexed { index, _note -> if (_note.id == note.id) selectedIndex = index }
-        if (selectedIndex < _notes.value.size - 1) selectNote(_notes.value[selectedIndex - 1])
+    fun selectNextNote() {
+        val selectedIndex = _notes.value.indexOfFirst { it.id == _selectedNote.value?.id }
+        if (selectedIndex < _notes.value.size - 1 && selectedIndex >= 0) selectNote(_notes.value[selectedIndex + 1])
     }
 
 
