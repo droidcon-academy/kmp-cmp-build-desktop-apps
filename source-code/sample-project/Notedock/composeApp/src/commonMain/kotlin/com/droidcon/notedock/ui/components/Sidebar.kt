@@ -3,6 +3,7 @@
 package com.droidcon.notedock.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.TooltipArea
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
@@ -21,7 +22,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.v2.ScrollbarAdapter
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
@@ -72,7 +72,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Notification
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
-import com.droidcon.notedock.util.dashedBorder
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.selects.select
@@ -102,6 +101,7 @@ fun Sidebar(
         var hoverOffset by remember { mutableStateOf(-1) }
 
         LazyColumn(
+            state = listState,
             contentPadding = PaddingValues(4.dp),
             modifier = Modifier.fillMaxSize()
                 .padding(8.dp)
@@ -152,7 +152,7 @@ fun Sidebar(
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small), contentColor = TooltipDefaults.plainTooltipContentColor, color = TooltipDefaults.plainTooltipContainerColor){
                         if (hoverOffset == index){
-                            Text(note.content, Modifier.align(Alignment.Center).padding(8.dp), style = MaterialTheme.typography.titleSmall)
+                            Text("Hold and drag to copy text to another window", Modifier.align(Alignment.Center).padding(8.dp), style = MaterialTheme.typography.titleSmall)
                         }
                     }
                 }, delayMillis = 500) {
@@ -165,12 +165,8 @@ fun Sidebar(
                             else onSelectNote(note)
 
                         })
-                        .background(if (note.id == selectedNote?.id) Color.DarkGray else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
-                        .composed{
-                            if (hoverOffset == index)
-                                dashedBorder(SolidColor(MaterialTheme.colorScheme.onTertiary), shape = MaterialTheme.shapes.small, strokeWidth = boxBorderSize)
-                            else Modifier
-                        }
+                        .background(if (note.id == selectedNote?.id) Color.LightGray else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
+                        .border(1.dp, if (hoverOffset == index) Color.Red else Color.Transparent, shape = MaterialTheme.shapes.medium)
                         .padding(8.dp)
                         .onPointerEvent(PointerEventType.Enter){
                             boxBorderSize = 4.dp
@@ -251,19 +247,10 @@ fun Sidebar(
                 }
             }
         }
-//        VerticalScrollbar(adapter = object: ScrollbarAdapter{
-//            override val scrollOffset: Double
-//                get() = TODO("Not yet implemented")
-//            override val contentSize: Double
-//                get() = TODO("Not yet implemented")
-//            override val viewportSize: Double
-//                get() = TODO("Not yet implemented")
-//
-//            override suspend fun scrollTo(scrollOffset: Double) {
-//                TODO("Not yet implemented")
-//            }
-//        },
-////            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight()
-//        )
+
+        VerticalScrollbar(
+            adapter = ScrollbarAdapter(listState)
+        )
+
     }
 }

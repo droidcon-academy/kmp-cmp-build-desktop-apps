@@ -31,7 +31,7 @@ fun QuickNoteWindow(
 ) {
     Window(
         title = title,
-        state = rememberWindowState(width = 400.dp, height = 300.dp),
+        state = rememberWindowState(width = 500.dp, height = 400.dp),
         onCloseRequest = onClose
     ) {
         var title by remember { mutableStateOf("") }
@@ -43,7 +43,7 @@ fun QuickNoteWindow(
                     value = title,
                     onValueChange = { title = it },
                     placeholder = { Text("Note Title", Modifier.padding(8.dp)) },
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f).padding(8.dp)
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.2f).padding(8.dp)
                         .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
 
                 )
@@ -52,7 +52,7 @@ fun QuickNoteWindow(
                     value = content,
                     onValueChange = { content = it },
                     placeholder = { Text("Note content ... ", Modifier.padding(8.dp)) },
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.5f).padding(8.dp)
+                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.8f).padding(8.dp)
                         .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
 
                 )

@@ -82,31 +82,3 @@ class Utils {
 }
 
 
-/**
- * Creates a dashed border. [See this](https://medium.com/@kappdev/dashed-borders-in-jetpack-compose-a-comprehensive-guide-de990a944c4c)
- */
-fun Modifier.dashedBorder(
-    brush: Brush,
-    shape: Shape,
-    strokeWidth: Dp = 2.dp,
-    dashLength: Dp = 4.dp,
-    gapLength: Dp = 4.dp,
-    cap: StrokeCap = StrokeCap.Round
-    ) = this.drawWithContent {
-        val outline = shape.createOutline(size, layoutDirection, density = this)
-        val dashedStroke = Stroke(
-            cap = cap,
-            width = strokeWidth.toPx(),
-            pathEffect = PathEffect.dashPathEffect(
-                intervals = floatArrayOf(dashLength.toPx(), gapLength.toPx())
-            )
-        )
-        drawContent()
-
-        drawOutline(
-            outline = outline,
-            style = dashedStroke,
-            brush = brush
-        )
-    }
-

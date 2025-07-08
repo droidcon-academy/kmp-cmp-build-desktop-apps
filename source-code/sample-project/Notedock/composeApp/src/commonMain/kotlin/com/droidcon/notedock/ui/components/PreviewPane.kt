@@ -7,6 +7,7 @@ import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -57,27 +58,30 @@ fun PreviewPane(
 
             ) {
 
-                TooltipArea(tooltip = {
-                    Surface(modifier = Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
-                        Text("Edit this note", Modifier.padding(4.dp))
-                    }
-                }, delayMillis = 500) {
+                Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                    TooltipArea(tooltip = {
+                        Surface(modifier = Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
+                            Text("Edit this note", Modifier.padding(4.dp))
+                        }
+                    }, delayMillis = 500) {
 
-                    IconButton(onClick = {
-                        onEditNote(note)
-                    }, modifier = Modifier.padding(8.dp).align(Alignment.Start)
+                        IconButton(onClick = {
+                            onEditNote(note)
+                        }, modifier = Modifier.padding(8.dp)
                         ) {
-                        Icon(Icons.Outlined.Edit, contentDescription = "Edit Note")
+                            Icon(Icons.Outlined.Edit, contentDescription = "Edit Note")
+                        }
                     }
+
+
+                    Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier
+                        .padding(8.dp)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        ,
+                        textAlign = TextAlign.Center
+                    )
+
                 }
-
-                Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier
-                    .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    ,
-                    textAlign = TextAlign.Center
-                )
-
                 Box(Modifier.fillMaxWidth().padding(8.dp)) {
                     // Edit note button
                     Text(

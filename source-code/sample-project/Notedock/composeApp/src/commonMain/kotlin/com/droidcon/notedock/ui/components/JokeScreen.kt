@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +25,7 @@ fun JokeScreen(modifier: Modifier = Modifier, jokeApi: JokeApi){
     var isLoading by remember { mutableStateOf(false) }
     var joke by remember { mutableStateOf<Joke?>(null)}
 
-    Column (modifier) {
+    Column (modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button({
             scope.launch {
                 isLoading = true
@@ -38,9 +39,10 @@ fun JokeScreen(modifier: Modifier = Modifier, jokeApi: JokeApi){
         if (isLoading){
             CircularProgressIndicator()
         }
+
         else if (joke != null){
-            Text(joke!!.setup, Modifier.padding(8.dp))
-            Text(joke!!.punchline, Modifier.padding(8.dp))
+            Text(joke!!.setup, Modifier.padding(8.dp), style = MaterialTheme.typography.titleSmall)
+            Text(joke!!.punchline, Modifier.padding(8.dp), style = MaterialTheme.typography.bodyLarge)
         }
 
     }
