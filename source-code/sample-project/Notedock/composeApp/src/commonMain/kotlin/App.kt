@@ -56,7 +56,7 @@ fun NotesScreen(
                 notes = notes,
                 selectedNote = selectedNote,
                 onSelectNote = onSelectNote,
-                onNoteDelete = onDeleteNote,
+                onDeleteNote = onDeleteNote,
                 onNewNote = onNewNote,
                 onOpenRandomJoke = { onOpenRandomJoke() },
                 onShowMessage = {

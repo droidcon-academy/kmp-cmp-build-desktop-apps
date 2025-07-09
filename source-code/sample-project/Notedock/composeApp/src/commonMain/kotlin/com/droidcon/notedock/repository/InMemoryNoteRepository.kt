@@ -2,9 +2,7 @@ package com.droidcon.notedock.repository
 
 import androidx.compose.runtime.mutableStateListOf
 import com.droidcon.notedock.model.Note
-import com.droidcon.notedock.repository.NoteRepository
 import com.droidcon.notedock.util.Utils
-import kotlin.random.Random
 
 class InMemoryNoteRepository : NoteRepository {
     // This mutableStateListOf will hold our notes in memory

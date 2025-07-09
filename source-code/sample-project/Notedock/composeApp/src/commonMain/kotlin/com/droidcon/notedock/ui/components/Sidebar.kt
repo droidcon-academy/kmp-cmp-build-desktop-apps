@@ -10,27 +10,28 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.draganddrop.dragAndDropSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarToday
-import androidx.compose.material.icons.outlined.CloudSync
-import androidx.compose.material.icons.outlined.Wifi
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TooltipDefaults
@@ -38,26 +39,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draganddrop.DragAndDropEvent
-import androidx.compose.ui.draganddrop.DragAndDropTarget
 import androidx.compose.ui.draganddrop.DragAndDropTransferAction
 import androidx.compose.ui.draganddrop.DragAndDropTransferData
 import androidx.compose.ui.draganddrop.DragAndDropTransferable
-import androidx.compose.ui.draganddrop.awtTransferable
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -67,9 +60,9 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Notification
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
 import java.awt.datatransfer.StringSelection
@@ -82,7 +75,7 @@ fun Sidebar(
     notes: List<Note>,
     selectedNote: Note?,
     onSelectNote: (Note?) -> Unit,
-    onNoteDelete: (Note) -> Unit,
+    onDeleteNote: (Note) -> Unit,
     onNewNote: () -> Unit,
     onOpenRandomJoke: () -> Unit,
     onShowMessage: (String) -> Unit,
@@ -213,11 +206,17 @@ fun Sidebar(
                             }
                             else false // If it's not a KeyDown, or selected note is null, or the key was not handled by us, propagate it
                         }
-                        //TODO: Blur item content and show drag hint
 
                     ) {
                         Column {
-                            Text(text = note.title, modifier = Modifier.padding(4.dp))
+                            Box (Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                                Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart))
+                                IconButton({
+                                    onDeleteNote(note)
+                                }, modifier = Modifier.align(Alignment.CenterEnd)){
+                                    Icon(Icons.Outlined.Delete, "Delete")
+                                }
+                            }
                             Text(text = note.content, modifier = Modifier.padding(4.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
                             Text(text = convertTimestampToDateString(note.timestamp, "MM/dd/yyyy HH:mm:ss"),
                                 style = MaterialTheme.typography.labelSmall)
