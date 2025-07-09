@@ -54,7 +54,7 @@ class InMemoryNoteRepository : NoteRepository {
         }
     }
 
-    override fun delete(id: Int) {
-        notes.removeAll { it.id == id } // Remove all notes with the given uid
+    override fun delete(note: Note) {
+        notes.removeAll { it.id == note.id } // Remove all notes with the given uid
     }
 }

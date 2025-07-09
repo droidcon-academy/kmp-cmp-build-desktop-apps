@@ -7,5 +7,5 @@ interface NoteRepository {
     fun getById(id: Int): Note?
     fun add(note: Note)
     fun update(note: Note)
-    fun delete(id: Int)
+    fun delete(note: Note)
 }

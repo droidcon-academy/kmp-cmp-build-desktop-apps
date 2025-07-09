@@ -51,11 +51,11 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         }
     }
 
-    fun deleteNote(noteId: Int) {
+    fun deleteNote(note: Note) {
         viewModelScope.launch {
-            repository.delete(noteId)
+            repository.delete(note)
             loadNotes() // Refresh the list after deletion
-            if (_selectedNote.value?.id == noteId) {
+            if (_selectedNote.value?.id == note.id) {
                 selectNote(null) // Deselect if the deleted note was selected
             }
         }

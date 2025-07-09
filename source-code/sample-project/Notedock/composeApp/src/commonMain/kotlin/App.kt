@@ -32,7 +32,7 @@ fun NotesScreen(
     selectedNote: Note?, // Pass selected note to display in preview
     onNewNote: () -> Unit,
     onEditNote: (Note) -> Unit,
-    onDeleteNote: (Int) -> Unit,
+    onDeleteNote: (Note) -> Unit,
     onOpenRandomJoke: () -> Unit,
     onSelectNote: (Note?) -> Unit, // Callback for selecting/deselecting a note in the list
     onSelectPrevNote: (Note) -> Unit,
@@ -64,7 +64,6 @@ fun NotesScreen(
                 },
                 onSelectPrevNote = onSelectPrevNote,
                 onSelectNextNote = onSelectNextNote,
-                onShowNotification = onShowNotification
             )
 
             // Note Preview Pane

@@ -72,10 +72,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Notification
 import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
-import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 
 //We put Sidebar under desktopMain because it requires desktop-specific APIs
@@ -86,18 +82,16 @@ fun Sidebar(
     notes: List<Note>,
     selectedNote: Note?,
     onSelectNote: (Note?) -> Unit,
-    onNoteDelete: (Int) -> Unit,
+    onNoteDelete: (Note) -> Unit,
     onNewNote: () -> Unit,
     onOpenRandomJoke: () -> Unit,
     onShowMessage: (String) -> Unit,
     onSelectPrevNote: (Note) -> Unit,
     onSelectNextNote: (Note) -> Unit,
-    onShowNotification: (Notification) -> Unit
     ){
     Box (modifier){
         val listState = rememberLazyListState()
         val textMeasurer = rememberTextMeasurer()
-        var boxBorderSize by remember{ mutableStateOf(0.dp) }
         var hoverOffset by remember { mutableStateOf(-1) }
 
         LazyColumn(
@@ -134,19 +128,6 @@ fun Sidebar(
                 }
             }
 
-            item {
-                TooltipArea(tooltip = {
-                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
-                        Text("Sync notes with the server", Modifier.padding(4.dp))
-                    }
-                }, delayMillis = 500){
-                    Button({ onShowNotification(Notification("Sync", "Sync Successful", Notification.Type.Info)) }, modifier = Modifier.padding(8.dp)){
-                        Icon(Icons.Outlined.CloudSync, "Cloud Sync")
-                        Text("Sync Notes", Modifier.padding(8.dp))
-                    }
-                }
-            }
-
             item { Spacer(Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colorScheme.onSurfaceVariant)) }
             itemsIndexed(items = notes, key = {index:Int, note:Note -> note.id}) { index, note ->
                 TooltipArea(tooltip = {
@@ -169,12 +150,10 @@ fun Sidebar(
                         .border(1.dp, if (hoverOffset == index) Color.Red else Color.Transparent, shape = MaterialTheme.shapes.medium)
                         .padding(8.dp)
                         .onPointerEvent(PointerEventType.Enter){
-                            boxBorderSize = 4.dp
                             print("PointerEventType.Enter")
                             hoverOffset = index
                         }
                         .onPointerEvent(PointerEventType.Exit){
-                            boxBorderSize = 0.dp
                             print("PointerEventType.Exit")
                             hoverOffset = -1
                         }
