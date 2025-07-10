@@ -16,11 +16,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.droidcon.notedock.repository.InMemoryNoteRepository
 import com.droidcon.notedock.viewmodel.NoteViewModel
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 
 import NotesScreen
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isShiftPressed
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.window.Notification
+
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -33,6 +42,9 @@ fun MainNotesWindow(
     onShowNotification: (Notification) -> Unit
 ) {
 
+    var isJokeWindowOpen by remember{mutableStateOf(false)}
+    var isEditorWindowOpen by remember { mutableStateOf(false) }
+
 //    val listState = rememberLazyListState()
 //    val draggedIndex = remember { mutableStateOf<Int?>(null) } // Keep if you re-enable drag and drop
 //    val targetIndex = remember { mutableStateOf<Int?>(null) }   // Keep if you re-enable drag and drop
@@ -44,7 +56,24 @@ fun MainNotesWindow(
     Window(
         state = windowState,
         title = "Notedock Note Keeper",
-        onCloseRequest = onCloseApp
+        onCloseRequest = onCloseApp,
+        onPreviewKeyEvent = {event ->
+        if (event.type == KeyEventType.KeyDown){
+            println("Key event: ${event.key}")
+            val consumedByMe = if (event.isCtrlPressed && event.key == Key.N){
+                isEditorWindowOpen = true
+                true
+            }
+            else if (event.isCtrlPressed && event.isShiftPressed && event.key == Key.D){
+                isJokeWindowOpen = true
+                true
+            }
+            else false
+            return@Window consumedByMe
+        }
+        return@Window false
+    }
+
     ) {
         val noteViewModel = viewModel { NoteViewModel(InMemoryNoteRepository()) }
 
@@ -52,8 +81,6 @@ fun MainNotesWindow(
         val notes by noteViewModel.notes.collectAsState()
         val selectedNote by noteViewModel.selectedNote.collectAsState()
 
-        var isJokeWindowOpen by remember{mutableStateOf(false)}
-        var isEditorWindowOpen by remember { mutableStateOf(false) }
 
 
         if (isJokeWindowOpen){
@@ -87,13 +114,27 @@ fun MainNotesWindow(
         }
 
 
-//        if (notes.isEmpty()){
-//            repeat(5) {
-//                vm.createNewNote("Note $it", "$it note content")
-//            }
-//        }
         MaterialTheme {
             NotesScreen(
+                modifier = Modifier
+                    //Use preview key event which is better suited to detect shortcuts
+                    .onPreviewKeyEvent{event ->
+                        if (event.type == KeyEventType.KeyDown){
+                            println("Key event: ${event.key}")
+                            val consumedByMe = if (event.isCtrlPressed && event.key == Key.N){
+                                isEditorWindowOpen = true
+                                true
+                            }
+                            else if (event.isCtrlPressed && event.isShiftPressed && event.key == Key.D){
+                                isJokeWindowOpen = true
+                                true
+                            }
+                            else false
+                            return@onPreviewKeyEvent consumedByMe
+                        }
+                        return@onPreviewKeyEvent false
+                    }
+                    ,
                 notes = notes,
                 selectedNote = selectedNote,
                 onNewNote = {
@@ -113,8 +154,7 @@ fun MainNotesWindow(
                                    },
                 onSelectNote = { noteViewModel.selectNote(it) },
                 onSelectPrevNote = {note-> noteViewModel.selectPrevNote()},
-                onSelectNextNote = {note-> noteViewModel.selectNextNote() },
-                onShowNotification = onShowNotification
+                onSelectNextNote = {note-> noteViewModel.selectNextNote() }
             )
 
         }

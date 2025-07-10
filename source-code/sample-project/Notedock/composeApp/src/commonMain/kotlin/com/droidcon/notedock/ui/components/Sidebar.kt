@@ -98,7 +98,7 @@ fun Sidebar(
             item {
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
-                        Text("Create a new note", Modifier.padding(4.dp))
+                        Text("Create a new note (Ctrl + N)", Modifier.padding(4.dp))
                     }
                 }, delayMillis = 500){
                     Button({ onNewNote() }, modifier = Modifier.padding(8.dp)){
@@ -111,7 +111,7 @@ fun Sidebar(
             item {
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
-                        Text("Get a random joke from server", Modifier.padding(4.dp))
+                        Text("Get a random joke from server (Ctrl + Shift + D)", Modifier.padding(4.dp))
                     }
                 }, delayMillis = 500){
                     Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)){

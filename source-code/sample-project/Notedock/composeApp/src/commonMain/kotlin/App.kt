@@ -28,6 +28,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun NotesScreen(
+    modifier: Modifier = Modifier,
     notes: List<Note>,
     selectedNote: Note?, // Pass selected note to display in preview
     onNewNote: () -> Unit,
@@ -37,7 +38,6 @@ fun NotesScreen(
     onSelectNote: (Note?) -> Unit, // Callback for selecting/deselecting a note in the list
     onSelectPrevNote: (Note) -> Unit,
     onSelectNextNote: (Note) -> Unit,
-    onShowNotification: (Notification) -> Unit
 
 ) {
     //Used for showing Snackbar messages
@@ -46,7 +46,7 @@ fun NotesScreen(
 
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }) {paddingValues ->
