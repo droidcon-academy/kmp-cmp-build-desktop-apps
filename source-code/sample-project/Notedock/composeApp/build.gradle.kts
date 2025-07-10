@@ -53,8 +53,16 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Rpm)
             packageName = "NoteDock"
             packageVersion = "1.0.0"
+
             macOS {
                 iconFile.set(project.file("src/desktopMain/composeResources/drawable/app_icon.icns")) // If you have an ICNS icon
+            }
+            linux {
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/notedock_icon.png"))
+            }
+
+            windows {
+                iconFile.set(project.file("src/desktopMain/composeResources/drawable/notedock_icon.png"))
             }
         }
     }
