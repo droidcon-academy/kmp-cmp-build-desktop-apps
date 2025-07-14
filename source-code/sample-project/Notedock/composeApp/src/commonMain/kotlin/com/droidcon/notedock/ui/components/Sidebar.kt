@@ -78,11 +78,10 @@ fun Sidebar(
     onDeleteNote: (Note) -> Unit,
     onNewNote: () -> Unit,
     onOpenRandomJoke: () -> Unit,
-    onShowMessage: (String) -> Unit,
     onSelectPrevNote: (Note) -> Unit,
     onSelectNextNote: (Note) -> Unit,
-    ){
-    Box (modifier){
+) {
+    Box(modifier) {
         val listState = rememberLazyListState()
         val textMeasurer = rememberTextMeasurer()
         var hoverOffset by remember { mutableStateOf(-1) }
@@ -97,11 +96,11 @@ fun Sidebar(
             //New note button
             item {
                 TooltipArea(tooltip = {
-                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
+                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
                         Text("Create a new note (Ctrl + N)", Modifier.padding(4.dp))
                     }
-                }, delayMillis = 500){
-                    Button({ onNewNote() }, modifier = Modifier.padding(8.dp)){
+                }, delayMillis = 500) {
+                    Button({ onNewNote() }, modifier = Modifier.padding(8.dp)) {
                         Icon(Icons.Outlined.Add, contentDescription = "Add")
                         Text("New Note")
                     }
@@ -110,11 +109,11 @@ fun Sidebar(
 
             item {
                 TooltipArea(tooltip = {
-                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
+                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
                         Text("Get a random joke from server (Ctrl + Shift + D)", Modifier.padding(4.dp))
                     }
-                }, delayMillis = 500){
-                    Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)){
+                }, delayMillis = 500) {
+                    Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)) {
                         Icon(Icons.Outlined.CalendarToday, "Today")
                         Text("Random Joke", Modifier.padding(8.dp))
                     }
@@ -122,105 +121,126 @@ fun Sidebar(
             }
 
             item { Spacer(Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colorScheme.onSurfaceVariant)) }
-            itemsIndexed(items = notes, key = {index:Int, note:Note -> note.id}) { index, note ->
-                TooltipArea(tooltip = {
-                    Surface(Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small), contentColor = TooltipDefaults.plainTooltipContentColor, color = TooltipDefaults.plainTooltipContainerColor){
-                        if (hoverOffset == index){
-                            Text("Hold and drag to copy text to another window", Modifier.align(Alignment.Center).padding(8.dp), style = MaterialTheme.typography.titleSmall)
-                        }
+            itemsIndexed(items = notes, key = { index: Int, note: Note -> note.id }) { index, note ->
+
+                Box(
+                    Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = {
+                        //Select if not already selected, otherwise de-select
+                        if (note.id == selectedNote?.id)
+                            onSelectNote(null)
+                        else onSelectNote(note)
+
+                    })
+                    .background(
+                        if (note.id == selectedNote?.id) Color.LightGray else MaterialTheme.colorScheme.background,
+                        MaterialTheme.shapes.small
+                    )
+                    .border(
+                        1.dp,
+                        if (hoverOffset == index) Color.Red else Color.Transparent,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .padding(8.dp)
+                    .onPointerEvent(PointerEventType.Enter) {
+                        println("PointerEventType.Enter")
+                        hoverOffset = index
                     }
-                }, delayMillis = 500) {
-                    Box(Modifier
-                        .fillMaxWidth()
-                        .clickable(onClick = {
-                            //Select if not already selected, otherwise de-select
-                            if (note.id == selectedNote?.id)
-                                onSelectNote(null)
-                            else onSelectNote(note)
-
-                        })
-                        .background(if (note.id == selectedNote?.id) Color.LightGray else MaterialTheme.colorScheme.background, MaterialTheme.shapes.small)
-                        .border(1.dp, if (hoverOffset == index) Color.Red else Color.Transparent, shape = MaterialTheme.shapes.medium)
-                        .padding(8.dp)
-                        .onPointerEvent(PointerEventType.Enter){
-                            print("PointerEventType.Enter")
-                            hoverOffset = index
-                        }
-                        .onPointerEvent(PointerEventType.Exit){
-                            print("PointerEventType.Exit")
-                            hoverOffset = -1
-                        }
-                        .dragAndDropSource(
-                            drawDragDecoration = {
-                                drawRect(
-                                    color = Color.Gray,
-                                    topLeft = Offset(0f, 0f),
-                                    size = Size(size.width, size.height)
-                                )
-                                val textLayoutResult = textMeasurer.measure(
-                                    text = AnnotatedString(note.content),
-                                    layoutDirection = layoutDirection,
-                                    density = this
-                                )
-
-                                drawText(
-                                    textLayoutResult = textLayoutResult,
-                                    topLeft = Offset(20f, 20f)
-                                )
-
-                            }
-                        ){offset ->
-                            DragAndDropTransferData(
-                                transferable = DragAndDropTransferable(
-                                    StringSelection(note.content)
-                                ),
-                                supportedActions = listOf(
-                                    DragAndDropTransferAction.Copy,
-                                    DragAndDropTransferAction.Move,
-                                    DragAndDropTransferAction.Link
-                                ),
-                                dragDecorationOffset = offset,
-                                onTransferCompleted = {
-                                    println("Action at source: $it")
-                                }
+                    .onPointerEvent(PointerEventType.Exit) {
+                        println("PointerEventType.Exit")
+                        hoverOffset = -1
+                    }
+                    .dragAndDropSource(
+                        drawDragDecoration = {
+                            drawRect(
+                                color = Color.Gray,
+                                topLeft = Offset(0f, 0f),
+                                size = Size(size.width, size.height)
                             )
+                            val textLayoutResult = textMeasurer.measure(
+                                text = AnnotatedString(note.content),
+                                layoutDirection = layoutDirection,
+                                density = this
+                            )
+
+                            drawText(
+                                textLayoutResult = textLayoutResult,
+                                topLeft = Offset(20f, 20f)
+                            )
+
                         }
-                        .onKeyEvent{event-> //Handles note selection with up/down keys
-
-                           if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
-                                selectedNote?.let {
-                                    val handled = when (event.key) {
-                                        Key.DirectionUp -> {
-                                            onSelectPrevNote(selectedNote); true
-                                        }
-
-                                        Key.DirectionDown -> {
-                                            onSelectNextNote(selectedNote); true
-                                        }
-
-                                        else -> false
-                                    }
-                                    if (handled) return@onKeyEvent true
-                                }
-                                true // Important! Ensures the key event is not consumed multiple times
+                    ) { offset ->
+                        DragAndDropTransferData(
+                            transferable = DragAndDropTransferable(
+                                StringSelection(note.content)
+                            ),
+                            supportedActions = listOf(
+                                DragAndDropTransferAction.Copy,
+                                DragAndDropTransferAction.Move,
+                                DragAndDropTransferAction.Link
+                            ),
+                            dragDecorationOffset = offset,
+                            onTransferCompleted = {
+                                println("Action at source: $it")
                             }
-                            else false // If it's not a KeyDown, or selected note is null, or the key was not handled by us, propagate it
-                        }
+                        )
+                    }
+                    .onKeyEvent { event -> //Handles note selection with up/down keys
 
-                    ) {
-                        Column {
-                            Box (Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-                                Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart))
+                        if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
+                            selectedNote?.let {
+                                val handled = when (event.key) {
+                                    Key.DirectionUp -> {
+                                        onSelectPrevNote(selectedNote); true
+                                    }
+
+                                    Key.DirectionDown -> {
+                                        onSelectNextNote(selectedNote); true
+                                    }
+
+                                    else -> false
+                                }
+                                if (handled) return@onKeyEvent true
+                            }
+                            true // Important! Ensures the key event is not consumed multiple times
+                        } else false // If it's not a KeyDown, or selected note is null or the key was not handled by us, propagate it
+                    }
+
+                ) {
+                    Column {
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart))
+                            TooltipArea(tooltip = {
+                                Surface(modifier = Modifier.shadow(2.dp, shape = MaterialTheme.shapes.small), color = TooltipDefaults.plainTooltipContainerColor, contentColor = TooltipDefaults.plainTooltipContentColor ) {
+                                    Text("Delete this note (Del)", Modifier.padding(8.dp))
+                                }
+                            }, modifier = Modifier.padding(4.dp).align(Alignment.CenterEnd)) {
                                 IconButton({
                                     onDeleteNote(note)
-                                }, modifier = Modifier.align(Alignment.CenterEnd)){
+                                }) {
                                     Icon(Icons.Outlined.Delete, "Delete")
                                 }
                             }
-                            Text(text = note.content, modifier = Modifier.padding(4.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            Text(text = convertTimestampToDateString(note.timestamp, "MM/dd/yyyy HH:mm:ss"),
-                                style = MaterialTheme.typography.labelSmall)
                         }
+                        TooltipArea(tooltip = {
+                            Surface(Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small), contentColor = TooltipDefaults.plainTooltipContentColor, color = TooltipDefaults.plainTooltipContainerColor){
+                                if (hoverOffset == index){
+                                    Text("${note.content.take(50)}...\nHold and drag to copy text to another window",  modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.titleSmall)
+                                }
+                            }
+                        }, delayMillis = 500) {
+                            Text(
+                                text = note.content,
+                                modifier = Modifier.padding(4.dp),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                        Text(
+                            text = convertTimestampToDateString(note.timestamp, "MM/dd/yyyy HH:mm:ss"),
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                 }
             }

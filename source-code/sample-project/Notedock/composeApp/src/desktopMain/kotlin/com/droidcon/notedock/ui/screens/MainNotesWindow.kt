@@ -38,8 +38,7 @@ fun MainNotesWindow(
     isQuickNoteWindowOpen: Boolean = false,
     onCloseQuickNote: () -> Unit,
     windowState: WindowState = rememberWindowState(),
-    onCloseApp: () -> Unit,
-    onShowNotification: (Notification) -> Unit
+    onCloseApp: () -> Unit
 ) {
 
     var isJokeWindowOpen by remember{mutableStateOf(false)}
@@ -48,7 +47,7 @@ fun MainNotesWindow(
 
     Window(
         state = windowState,
-        title = getPlatform().name,
+        title = "Note Dock App",
         onCloseRequest = onCloseApp,
         onPreviewKeyEvent = {event ->
         if (event.type == KeyEventType.KeyDown){

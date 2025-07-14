@@ -59,9 +59,6 @@ fun NotesScreen(
                 onDeleteNote = onDeleteNote,
                 onNewNote = onNewNote,
                 onOpenRandomJoke = { onOpenRandomJoke() },
-                onShowMessage = {
-                   scope.launch { snackBarHostState.showSnackbar(it) }
-                },
                 onSelectPrevNote = onSelectPrevNote,
                 onSelectNextNote = onSelectNextNote,
             )

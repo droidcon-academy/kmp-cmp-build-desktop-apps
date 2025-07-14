@@ -29,12 +29,7 @@ fun main() = application {
         onCloseQuickNote = { isQuickNoteWindowOpen = false},
         isQuickNoteWindowOpen = isQuickNoteWindowOpen,
         windowState = windowState,
-        onCloseApp = ::exitApplication,
-        onShowNotification = {
-            trayState.sendNotification(
-                Notification(it.title, it.message, it.type)
-            )
-        }
+        onCloseApp = ::exitApplication
     )
 
     Tray(
