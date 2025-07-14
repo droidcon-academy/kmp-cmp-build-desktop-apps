@@ -2,6 +2,15 @@
 
 package com.droidcon.notedock.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollbarAdapter
 import androidx.compose.foundation.TooltipArea
@@ -97,7 +106,11 @@ fun Sidebar(
             item {
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
-                        Text("Create a new note (Ctrl + N)", Modifier.padding(4.dp), style = MaterialTheme.typography.labelSmall)
+                        Text(
+                            "Create a new note (Ctrl + N)",
+                            Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                 }, delayMillis = 500) {
                     Button({ onNewNote() }, modifier = Modifier.padding(8.dp)) {
@@ -110,7 +123,11 @@ fun Sidebar(
             item {
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
-                        Text("Get a random joke from server (Ctrl + Shift + D)", Modifier.padding(4.dp), style = MaterialTheme.typography.labelSmall)
+                        Text(
+                            "Get a random joke from server (Ctrl + Shift + D)",
+                            Modifier.padding(4.dp),
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                 }, delayMillis = 500) {
                     Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)) {
@@ -199,7 +216,7 @@ fun Sidebar(
                                             onSelectNextNote(selectedNote); true
                                         }
 
-                                        Key.Delete,Key.Backspace -> {
+                                        Key.Delete, Key.Backspace -> {
                                             onDeleteNote(selectedNote); true
                                         }
 
@@ -212,6 +229,7 @@ fun Sidebar(
                         }
 
                 ) {
+
                     Column {
                         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                             Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart))
@@ -221,7 +239,11 @@ fun Sidebar(
                                     color = TooltipDefaults.plainTooltipContainerColor,
                                     contentColor = TooltipDefaults.plainTooltipContentColor
                                 ) {
-                                    Text("Delete this note (Del)", Modifier.padding(8.dp), style = MaterialTheme.typography.labelSmall)
+                                    Text(
+                                        "Delete this note (Del)",
+                                        Modifier.padding(8.dp),
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
                                 }
                             }, modifier = Modifier.padding(4.dp).align(Alignment.CenterEnd)) {
                                 IconButton({
