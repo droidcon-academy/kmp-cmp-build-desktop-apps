@@ -29,7 +29,7 @@ import androidx.compose.ui.input.key.isCtrlPressed
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.window.Notification
-
+import com.droidcon.notedock.getPlatform
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -48,7 +48,7 @@ fun MainNotesWindow(
 
     Window(
         state = windowState,
-        title = "Notedock Note Keeper",
+        title = getPlatform().name,
         onCloseRequest = onCloseApp,
         onPreviewKeyEvent = {event ->
         if (event.type == KeyEventType.KeyDown){
