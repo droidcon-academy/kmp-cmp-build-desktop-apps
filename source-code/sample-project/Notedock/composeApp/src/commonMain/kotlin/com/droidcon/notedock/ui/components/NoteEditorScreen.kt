@@ -69,9 +69,7 @@ fun NoteEditorScreen(
     val scope = rememberCoroutineScope()
 
     //For drop target
-    var showTargetBorder by remember { mutableStateOf(false) }
     var targetText by remember { mutableStateOf("Drop Here") }
-    val coroutineScope = rememberCoroutineScope ()
 
     // Get focus manager used to handle Tab key presses
     val focusManager = LocalFocusManager.current
@@ -86,12 +84,11 @@ fun NoteEditorScreen(
     val dragAndDropTarget = remember {
         object: DragAndDropTarget{
             override fun onStarted(event: DragAndDropEvent) {
-                showTargetBorder = true
                 targetText = "Drop Here"
             }
 
             override fun onEnded(event: DragAndDropEvent) {
-                showTargetBorder = false
+                //Do nothing
             }
 
 

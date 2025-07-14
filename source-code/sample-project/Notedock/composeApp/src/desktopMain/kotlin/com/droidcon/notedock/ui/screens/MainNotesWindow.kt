@@ -45,13 +45,6 @@ fun MainNotesWindow(
     var isJokeWindowOpen by remember{mutableStateOf(false)}
     var isEditorWindowOpen by remember { mutableStateOf(false) }
 
-//    val listState = rememberLazyListState()
-//    val draggedIndex = remember { mutableStateOf<Int?>(null) } // Keep if you re-enable drag and drop
-//    val targetIndex = remember { mutableStateOf<Int?>(null) }   // Keep if you re-enable drag and drop
-//    val textMeasurer = rememberTextMeasurer()
-//    val density = LocalDensity.current
-//    val layoutDirection = LocalLayoutDirection.current
-//    val hapticFeedback = LocalHapticFeedback.current
 
     Window(
         state = windowState,

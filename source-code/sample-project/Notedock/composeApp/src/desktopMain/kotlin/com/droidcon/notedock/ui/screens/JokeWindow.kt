@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberWindowState
-import com.droidcon.notedock.api.JokeApi
 import com.droidcon.notedock.ui.components.JokeScreen
 
 @Composable
@@ -18,7 +17,6 @@ fun JokeWindow(
     onCloseRequest: () -> Unit
 ){
     Window(title = title, onCloseRequest = onCloseRequest){
-        JokeScreen(modifier = Modifier.fillMaxSize().padding(8.dp),
-            jokeApi = remember { JokeApi() })
+        JokeScreen(modifier = Modifier.fillMaxSize().padding(8.dp))
     }
 }
