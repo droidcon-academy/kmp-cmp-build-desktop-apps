@@ -46,6 +46,7 @@ fun MainNotesWindow(
 
     var isJokeWindowOpen by remember{mutableStateOf(false)}
     var isEditorWindowOpen by remember { mutableStateOf(false) }
+    var noteToDelete by remember { mutableStateOf(null) }
 
 
     Window(
@@ -138,7 +139,7 @@ fun MainNotesWindow(
                     isJokeWindowOpen = true
                                    },
                 onSelectNote = { noteViewModel.selectNote(it) },
-                onSelectPrevNote = {note-> noteViewModel.selectPrevNote()},
+                onSelectPrevNote = {note-> noteViewModel.selectPrevNote() },
                 onSelectNextNote = {note-> noteViewModel.selectNextNote() }
             )
 
