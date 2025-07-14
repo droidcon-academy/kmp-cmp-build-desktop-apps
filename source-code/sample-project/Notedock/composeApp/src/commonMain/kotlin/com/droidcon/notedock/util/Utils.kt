@@ -10,10 +10,16 @@ import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isMetaPressed
+import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.jetbrains.skiko.OS
+import org.jetbrains.skiko.hostOs
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -81,4 +87,30 @@ class Utils {
 
 }
 
+
+/**
+ * Handles keyboard shortcuts for the main notes window
+ */
+fun handleMainWindowKbShortcuts(
+    event: KeyEvent,
+    onOpenNewNoteWindow: () -> Unit,
+    onOpenJokeWindow: () -> Unit
+): Boolean {
+    if (event.type == KeyEventType.KeyDown) {
+        println("Key event: ${event.key}")
+        // Handle Cmd and Ctrl based on platform
+        val isPrimaryModifierPressed = if (hostOs == OS.MacOS) event.isMetaPressed else event.isCtrlPressed
+
+        val consumedByMe = if (isPrimaryModifierPressed && event.key == Key.N) {
+            onOpenNewNoteWindow()
+            true
+        } else if (isPrimaryModifierPressed && event.isShiftPressed && event.key == Key.D) {
+            onOpenJokeWindow()
+            true
+        } else false
+        return consumedByMe
+    }
+    return false
+
+}
 

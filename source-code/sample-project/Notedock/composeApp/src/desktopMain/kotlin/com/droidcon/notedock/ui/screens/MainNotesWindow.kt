@@ -30,6 +30,9 @@ import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.window.Notification
 import com.droidcon.notedock.getPlatform
+import com.droidcon.notedock.util.handleMainWindowKbShortcuts
+import org.jetbrains.skiko.OS
+import org.jetbrains.skiko.hostOs
 
 
 @OptIn(ExperimentalResourceApi::class)
@@ -47,24 +50,14 @@ fun MainNotesWindow(
 
     Window(
         state = windowState,
-        title = "Note Dock App",
+        title = hostOs.name,
         onCloseRequest = onCloseApp,
-        onPreviewKeyEvent = {event ->
-        if (event.type == KeyEventType.KeyDown){
-            println("Key event: ${event.key}")
-            val consumedByMe = if (event.isCtrlPressed && event.key == Key.N){
-                isEditorWindowOpen = true
-                true
-            }
-            else if (event.isCtrlPressed && event.isShiftPressed && event.key == Key.D){
-                isJokeWindowOpen = true
-                true
-            }
-            else false
-            return@Window consumedByMe
+        onPreviewKeyEvent = {event->
+            handleMainWindowKbShortcuts(event,
+                onOpenNewNoteWindow = { isEditorWindowOpen = true },
+                onOpenJokeWindow = { isJokeWindowOpen = true }
+                )
         }
-        return@Window false
-    }
 
     ) {
         val noteViewModel = viewModel { NoteViewModel(InMemoryNoteRepository()) }
