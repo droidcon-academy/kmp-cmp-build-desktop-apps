@@ -28,10 +28,7 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.isCtrlPressed
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.window.Notification
-import com.droidcon.notedock.getPlatform
 import com.droidcon.notedock.util.handleMainWindowKbShortcuts
-import org.jetbrains.skiko.OS
 import org.jetbrains.skiko.hostOs
 
 
@@ -46,7 +43,7 @@ fun MainNotesWindow(
 
     var isJokeWindowOpen by remember{mutableStateOf(false)}
     var isEditorWindowOpen by remember { mutableStateOf(false) }
-    var noteToDelete by remember { mutableStateOf(null) }
+    var isConfirmationDialogOpen by remember { mutableStateOf(false) }
 
 
     Window(
@@ -99,6 +96,17 @@ fun MainNotesWindow(
             )
         }
 
+        if (isConfirmationDialogOpen){
+            DeleteConfirmationDialog(
+                note = selectedNote!!,
+                onCloseRequest = {
+                    isConfirmationDialogOpen = false
+                },
+                onConfirmDelete = { decision->
+                    if (decision) noteViewModel.deleteNote(selectedNote!!)
+                }
+            )
+        }
 
         MaterialTheme {
             NotesScreen(
@@ -132,8 +140,7 @@ fun MainNotesWindow(
                     noteViewModel.selectNote(it)
                              },
                 onDeleteNote = {
-                    noteViewModel.deleteNote(it)
-
+                    isConfirmationDialogOpen = true
                                },
                 onOpenRandomJoke = {
                     isJokeWindowOpen = true

@@ -42,7 +42,6 @@ fun NotesScreen(
 ) {
     //Used for showing Snackbar messages
     val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
 
     Scaffold(
