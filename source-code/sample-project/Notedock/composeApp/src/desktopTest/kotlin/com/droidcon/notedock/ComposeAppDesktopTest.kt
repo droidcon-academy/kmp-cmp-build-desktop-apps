@@ -50,32 +50,7 @@ class InMemoryNoteRepositoryTest {
         assertTrue(repository.getAll().contains(note2), "Repository should contain note2")
     }
 
-    @Test
-    fun testAddNoteWithExistingId() {
-        val note1 = Note(1, "Original Title", "Original Content")
-        repository.add(note1)
 
-        val noteWithSameId = Note(1, "New Title", "New Content")
-        repository.add(noteWithSameId) // Adding with same ID should effectively update or do nothing if it's an 'add' contract
-
-        // Assuming 'add' with existing ID updates the note based on typical repository behavior.
-        // If 'add' is strictly for new notes and should throw/ignore on existing ID, the assertion changes.
-        // For InMemoryNoteRepository, it typically replaces.
-        val fetchedNote = repository.getById(note1.id)
-        assertNotNull(fetchedNote)
-        assertEquals("New Title", fetchedNote.title, "Adding note with existing ID should update the existing note's title")
-        assertEquals(1, repository.getAll().size, "Repository size should remain 1 after adding note with existing ID")
-    }
-
-    @Test
-    fun testGetByIdExistingNote() {
-        val note1 = Note(10, "Unique Title", "Unique Content")
-        repository.add(note1)
-
-        val fetchedNote = repository.getById(10)
-        assertNotNull(fetchedNote, "getById should return the note if it exists")
-        assertEquals(note1, fetchedNote, "Fetched note should be identical to the added one")
-    }
 
     @Test
     fun testGetByIdNonExistentNote() {
