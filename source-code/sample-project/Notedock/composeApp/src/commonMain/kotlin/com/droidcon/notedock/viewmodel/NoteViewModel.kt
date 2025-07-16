@@ -70,12 +70,6 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
         print("Created note ${newNote.title}: ${newNote.content}")
     }
 
-    // Function to update note content temporarily for editing without saving
-    fun updateEditingNoteContent(noteId: Int, newTitle: String, newContent: String) {
-        if (_selectedNote.value?.id == noteId) {
-            _selectedNote.value = _selectedNote.value?.copy(title = newTitle, content = newContent)
-        }
-    }
 
     /**
      * Selects the note previous to this note.

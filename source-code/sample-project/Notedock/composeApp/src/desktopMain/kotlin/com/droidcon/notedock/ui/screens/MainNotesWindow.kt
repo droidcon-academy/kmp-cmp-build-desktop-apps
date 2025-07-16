@@ -48,7 +48,7 @@ fun MainNotesWindow(
 
     Window(
         state = windowState,
-        title = hostOs.name,
+        title = "Note Dock App",
         onCloseRequest = onCloseApp,
         onPreviewKeyEvent = {event->
             handleMainWindowKbShortcuts(event,
