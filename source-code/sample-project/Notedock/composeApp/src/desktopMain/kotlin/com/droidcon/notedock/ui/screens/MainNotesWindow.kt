@@ -29,6 +29,10 @@ import androidx.compose.ui.input.key.isCtrlPressed
 import androidx.compose.ui.input.key.isShiftPressed
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import com.droidcon.notedock.util.handleMainWindowKbShortcuts
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import org.jetbrains.skiko.hostOs
 
 
@@ -38,7 +42,8 @@ fun MainNotesWindow(
     isQuickNoteWindowOpen: Boolean = false,
     onCloseQuickNote: () -> Unit,
     windowState: WindowState = rememberWindowState(),
-    onCloseApp: () -> Unit
+    onCloseApp: () -> Unit,
+    httpClient: HttpClient
 ) {
 
     var isJokeWindowOpen by remember{mutableStateOf(false)}
@@ -64,14 +69,13 @@ fun MainNotesWindow(
         val notes by noteViewModel.notes.collectAsState()
         val selectedNote by noteViewModel.selectedNote.collectAsState()
 
-
-
         if (isJokeWindowOpen){
             JokeWindow(
                 title = "Joke of the day",
                 onCloseRequest = {
                 isJokeWindowOpen = false
-            })
+            },
+                httpClient)
         }
 
         if (isEditorWindowOpen){

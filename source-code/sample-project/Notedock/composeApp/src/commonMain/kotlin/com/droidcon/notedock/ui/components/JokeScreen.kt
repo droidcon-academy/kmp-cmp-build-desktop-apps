@@ -20,32 +20,16 @@ import io.ktor.client.statement.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+
 
 const val JOKE_API_URL = "https://official-joke-api.appspot.com/random_joke"
 @Composable
-fun JokeScreen(modifier: Modifier = Modifier){
+fun JokeScreen(modifier: Modifier = Modifier, httpClient: HttpClient){
     val scope = rememberCoroutineScope ()
     var jokeState: JokeResult by remember{ mutableStateOf(JokeResult.NotStarted)}
 
-    val httpClient = remember {
-        HttpClient {
-            install(ContentNegotiation) { // Install the ContentNegotiation plugin
-                json(Json { // Use kotlinx.serialization's JSON format
-                    ignoreUnknownKeys = true // To handle cases where API might return extra fields
-                })
-            }
-        }
-    }
 
 
-    DisposableEffect(Unit) {
-        onDispose {
-            httpClient.close() // Close the client to release resources
-        }
-    }
     Column (modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button({
             //Start loading state
