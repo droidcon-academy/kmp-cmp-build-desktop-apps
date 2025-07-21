@@ -34,7 +34,7 @@ fun NoteEditorScreen(
     note: Note?,
     onClose: () -> Unit,
     onSave: (Note) -> Unit
-){
+) {
     var title by remember { mutableStateOf(note?.title ?: "") }
     var content by remember { mutableStateOf(note?.content ?: "") }
 
@@ -55,7 +55,7 @@ fun NoteEditorScreen(
 
 
     val dragAndDropTarget = remember {
-        object: DragAndDropTarget{
+        object : DragAndDropTarget {
             override fun onStarted(event: DragAndDropEvent) {
                 targetText = "Drop Here"
             }
@@ -69,7 +69,7 @@ fun NoteEditorScreen(
                 println("Action in the target: ${event.action}")
                 content = targetText
 
-                targetText = event.awtTransferable.let{
+                targetText = event.awtTransferable.let {
                     if (it.isDataFlavorSupported(DataFlavor.stringFlavor))
                         it.getTransferData(DataFlavor.stringFlavor) as String
                     else
@@ -89,27 +89,28 @@ fun NoteEditorScreen(
             SnackbarHost(snackbarHostState)
         }
     ) {
-        Column(modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .fillMaxHeight(0.7f)
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .onPreviewKeyEvent{event->
-                if (event.type == KeyEventType.KeyDown && event.key == Key.Tab) {
-                    if (event.isShiftPressed) {
-                        // Shift + Tab: Move focus backward
-                        focusManager.moveFocus(FocusDirection.Previous)
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(0.7f)
+                .background(MaterialTheme.colorScheme.secondaryContainer)
+                .onPreviewKeyEvent { event ->
+                    if (event.type == KeyEventType.KeyDown && event.key == Key.Tab) {
+                        if (event.isShiftPressed) {
+                            // Shift + Tab: Move focus backward
+                            focusManager.moveFocus(FocusDirection.Previous)
+                        } else {
+                            // Tab: Move focus forward
+                            focusManager.moveFocus(FocusDirection.Next)
+                        }
+                        true // Consume the event so the TextField does NOT get it for indentation
                     } else {
-                        // Tab: Move focus forward
-                        focusManager.moveFocus(FocusDirection.Next)
+                        false // Not a Tab key or not KeyDown, let it propagate normally
                     }
-                    true // Consume the event so the TextField does NOT get it for indentation
-                } else {
-                    false // Not a Tab key or not KeyDown, let it propagate normally
+
+
                 }
-
-
-            }
         ) {
             TextField(
                 value = title,
@@ -132,7 +133,7 @@ fun NoteEditorScreen(
                     .fillMaxWidth()
                     .weight(1f) // Makes it expandable
                     .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .dragAndDropTarget(shouldStartDragAndDrop = {true}, target = dragAndDropTarget)
+                    .dragAndDropTarget(shouldStartDragAndDrop = { true }, target = dragAndDropTarget)
                     .focusRequester(contentFocusRequester)
 
 
@@ -141,32 +142,35 @@ fun NoteEditorScreen(
             Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
 
 
-                Button(onClick = onClose,
+                Button(
+                    onClick = onClose,
                     modifier = Modifier
                         .focusRequester(cancelFocusRequester)
-                    ) { Text("Cancel") }
+                ) { Text("Cancel") }
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = {
-                    if (title.isEmpty() && content.isEmpty()){
-                        scope.launch { snackbarHostState.showSnackbar("Please fill in title and content") }
-                        return@Button
-                    }
-                    if (note == null) {
-                        onSave(
-                            Note(
-                                id = -1,
-                                title = title,
-                                content = content
-                            )
-                        ) //Passing -1 means this is a new note rather than an edited one
-                        scope.launch { snackbarHostState.showSnackbar("Created new note") }
-                    } else {
-                        val edited = note.copy(title = title, content = content)
-                        onSave(edited)
-                        scope.launch { snackbarHostState.showSnackbar("Saved note") }
-                    }
-                }, modifier = Modifier
-                    .focusRequester(saveFocusRequester)
+                Button(
+                    onClick = {
+                        if (title.isEmpty() && content.isEmpty()) {
+                            scope.launch { snackbarHostState.showSnackbar("Please fill in title and content") }
+                            return@Button
+                        }
+                        if (note == null) {
+                            onSave(
+                                Note(
+                                    id = -1,
+                                    title = title,
+                                    content = content
+                                )
+                            ) //Passing -1 means this is a new note rather than an edited one
+                            scope.launch { snackbarHostState.showSnackbar("Created new note") }
+                            onClose() //Save and close
+                        } else {
+                            val edited = note.copy(title = title, content = content)
+                            onSave(edited)
+                            scope.launch { snackbarHostState.showSnackbar("Saved note") }
+                        }
+                    }, modifier = Modifier
+                        .focusRequester(saveFocusRequester)
                 ) {
                     Text("Save")
                 }

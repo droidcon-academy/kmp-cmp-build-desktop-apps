@@ -29,37 +29,40 @@ fun PreviewPane(
     note: Note?,
     onEditNote: (Note) -> Unit,
     modifier: Modifier = Modifier
-){
+) {
 
-    Column (modifier,
+    Column(
+        modifier,
         verticalArrangement = Arrangement.Center
-        ) {
+    ) {
         note?.let {
-            Column(Modifier
-                .fillMaxSize()
+            Column(
+                Modifier
+                    .fillMaxSize()
 
             ) {
 
-                Row (Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     TooltipArea(tooltip = {
-                        Surface(modifier = Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)){
+                        Surface(modifier = Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
                             Text("Edit this note", Modifier.padding(4.dp))
                         }
                     }, delayMillis = 500) {
 
-                        IconButton(onClick = {
-                            onEditNote(note)
-                        }, modifier = Modifier.padding(8.dp)
+                        IconButton(
+                            onClick = {
+                                onEditNote(note)
+                            }, modifier = Modifier.padding(8.dp)
                         ) {
                             Icon(Icons.Outlined.Edit, contentDescription = "Edit Note")
                         }
                     }
 
 
-                    Text(text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier
-                        .padding(8.dp)
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        ,
+                    Text(
+                        text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier
+                            .padding(8.dp)
+                            .background(MaterialTheme.colorScheme.secondaryContainer),
                         textAlign = TextAlign.Center
                     )
 
@@ -75,7 +78,7 @@ fun PreviewPane(
                 }
             }
         }
-        if (note == null){
+        if (note == null) {
             Text("Select a note to preview", Modifier.padding(8.dp).align(Alignment.CenterHorizontally))
         }
     }

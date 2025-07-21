@@ -14,13 +14,12 @@ fun convertTimestampToDateString(timestampMillis: Long, pattern: String): String
 }
 
 
-
 class Utils {
     companion object {
         /**
          * Generates random sentences
          */
-        fun generateRandomSentence(): String{
+        fun generateRandomSentence(): String {
             val subjects = listOf(
                 "We",
                 "Police",

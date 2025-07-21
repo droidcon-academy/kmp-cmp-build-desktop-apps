@@ -1,7 +1,6 @@
 package com.droidcon.notedock
 
 
-
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,7 +20,6 @@ import notedock.composeapp.generated.resources.notedock_icon
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-
 
 
 // Define shared HttpClient instance at the top level
@@ -46,10 +44,10 @@ fun main() = application {
     /**
      * Controls opening of Quick Note Window
      */
-    var isQuickNoteWindowOpen by remember{ mutableStateOf(false) }
+    var isQuickNoteWindowOpen by remember { mutableStateOf(false) }
 
     MainNotesWindow(
-        onCloseQuickNote = { isQuickNoteWindowOpen = false},
+        onCloseQuickNote = { isQuickNoteWindowOpen = false },
         isQuickNoteWindowOpen = isQuickNoteWindowOpen,
         windowState = windowState,
         onCloseApp = ::exitApplication,

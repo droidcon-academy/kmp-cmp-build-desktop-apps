@@ -61,8 +61,7 @@ fun Sidebar(
         LazyColumn(
             state = listState,
             contentPadding = PaddingValues(4.dp),
-            modifier = Modifier.fillMaxSize()
-                .padding(8.dp)
+            modifier = Modifier.fillMaxSize().padding(8.dp)
                 .border(2.dp, MaterialTheme.colorScheme.onSurface, MaterialTheme.shapes.large)
         ) {
             //New note button
@@ -107,89 +106,74 @@ fun Sidebar(
                     Modifier
                         .fillMaxWidth()
                         .clickable(onClick = {
-                            //Select if not already selected, otherwise de-select
-                            if (note.id == selectedNote?.id)
-                                onSelectNote(null)
-                            else onSelectNote(note)
+                        //Select if not already selected, otherwise de-select
+                        if (note.id == selectedNote?.id) onSelectNote(null)
+                        else onSelectNote(note)
 
-                        })
-                        .background(
-                            if (note.id == selectedNote?.id) Color.LightGray else MaterialTheme.colorScheme.background,
-                            MaterialTheme.shapes.small
-                        )
-                        .border(
-                            1.dp,
-                            if (hoverOffset == index) Color.Red else Color.Transparent,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .padding(8.dp)
-                        .onPointerEvent(PointerEventType.Enter) {
-                            println("PointerEventType.Enter")
-                            hoverOffset = index
                         }
-                        .onPointerEvent(PointerEventType.Exit) {
-                            println("PointerEventType.Exit")
-                            hoverOffset = -1
-                        }
-                        .dragAndDropSource(
-                            drawDragDecoration = {
-                                drawRect(
-                                    color = Color.Gray,
-                                    topLeft = Offset(0f, 0f),
-                                    size = Size(size.width, size.height)
-                                )
-                                val textLayoutResult = textMeasurer.measure(
-                                    text = AnnotatedString(note.content),
-                                    layoutDirection = layoutDirection,
-                                    density = this
-                                )
-
-                                drawText(
-                                    textLayoutResult = textLayoutResult,
-                                    topLeft = Offset(20f, 20f)
-                                )
-
-                            }
-                        ) { offset ->
-                            DragAndDropTransferData(
-                                transferable = DragAndDropTransferable(
-                                    StringSelection(note.content)
-                                ),
-                                supportedActions = listOf(
-                                    DragAndDropTransferAction.Copy,
-                                    DragAndDropTransferAction.Move,
-                                    DragAndDropTransferAction.Link
-                                ),
-                                dragDecorationOffset = offset,
-                                onTransferCompleted = {
-                                    println("Action at source: $it")
-                                }
+                        ).background(
+                        if (note.id == selectedNote?.id) Color.LightGray else MaterialTheme.colorScheme.background,
+                        MaterialTheme.shapes.small
+                    ).border(
+                        1.dp,
+                        if (hoverOffset == index) Color.Red else Color.Transparent,
+                        shape = MaterialTheme.shapes.medium
+                    ).padding(8.dp).onPointerEvent(PointerEventType.Enter) {
+                        println("PointerEventType.Enter")
+                        hoverOffset = index
+                    }.onPointerEvent(PointerEventType.Exit) {
+                        println("PointerEventType.Exit")
+                        hoverOffset = -1
+                    }.dragAndDropSource(
+                        drawDragDecoration = {
+                            drawRect(
+                                color = Color.Gray, topLeft = Offset(0f, 0f), size = Size(size.width, size.height)
                             )
-                        }
-                        .onKeyEvent { event -> //Handles note selection with up/down keys
+                            val textLayoutResult = textMeasurer.measure(
+                                text = AnnotatedString(note.content),
+                                layoutDirection = layoutDirection,
+                                density = this
+                            )
 
-                            if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
-                                selectedNote?.let {
-                                    val handled = when (event.key) {
-                                        Key.DirectionUp -> {
-                                            onSelectPrevNote(selectedNote); true
-                                        }
+                            drawText(
+                                textLayoutResult = textLayoutResult, topLeft = Offset(20f, 20f)
+                            )
 
-                                        Key.DirectionDown -> {
-                                            onSelectNextNote(selectedNote); true
-                                        }
+                        }) { offset ->
+                        DragAndDropTransferData(
+                            transferable = DragAndDropTransferable(
+                                StringSelection(note.content)
+                            ), supportedActions = listOf(
+                                DragAndDropTransferAction.Copy,
+                                DragAndDropTransferAction.Move,
+                                DragAndDropTransferAction.Link
+                            ), dragDecorationOffset = offset, onTransferCompleted = {
+                                println("Action at source: $it")
+                            })
+                    }.onKeyEvent { event -> //Handles note selection with up/down keys
 
-                                        Key.Delete, Key.Backspace -> {
-                                            onDeleteNote(selectedNote); true
-                                        }
-
-                                        else -> false
+                        if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
+                            selectedNote?.let {
+                                val handled = when (event.key) {
+                                    Key.DirectionUp -> {
+                                        onSelectPrevNote(selectedNote); true
                                     }
-                                    if (handled) return@onKeyEvent true
+
+                                    Key.DirectionDown -> {
+                                        onSelectNextNote(selectedNote); true
+                                    }
+
+                                    Key.Delete, Key.Backspace -> {
+                                        onDeleteNote(selectedNote); true
+                                    }
+
+                                    else -> false
                                 }
-                                true // Important! Ensures the key event is not consumed multiple times
-                            } else false // If it's not a KeyDown, or selected note is null or the key was not handled by us, propagate it
-                        }
+                                if (handled) return@onKeyEvent true
+                            }
+                            true // Important! Ensures the key event is not consumed multiple times
+                        } else false // If it's not a KeyDown, or selected note is null or the key was not handled by us, propagate it
+                    }
 
                 ) {
 
@@ -210,6 +194,7 @@ fun Sidebar(
                                 }
                             }, modifier = Modifier.padding(4.dp).align(Alignment.CenterEnd)) {
                                 IconButton({
+                                    onSelectNote(note) //Select if not already selected
                                     onDeleteNote(note)
                                 }) {
                                     Icon(Icons.Outlined.Delete, "Delete")

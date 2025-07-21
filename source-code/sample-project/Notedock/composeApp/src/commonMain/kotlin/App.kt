@@ -31,7 +31,7 @@ fun NotesScreen(
     onSelectPrevNote: (Note) -> Unit,
     onSelectNextNote: (Note) -> Unit,
 
-) {
+    ) {
     //Used for showing Snackbar messages
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -40,10 +40,11 @@ fun NotesScreen(
         modifier = modifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
-        }) {paddingValues ->
+        }) { paddingValues ->
         Row(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             // Notes List Sidebar with Scrollbar
-            Sidebar(Modifier.fillMaxWidth(0.3f),
+            Sidebar(
+                Modifier.fillMaxWidth(0.3f),
                 notes = notes,
                 selectedNote = selectedNote,
                 onSelectNote = onSelectNote,
@@ -55,12 +56,12 @@ fun NotesScreen(
             )
 
             // Note Preview Pane
-            PreviewPane(selectedNote,
+            PreviewPane(
+                selectedNote,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.extraLarge)
-                ,
+                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.extraLarge),
                 onEditNote = onEditNote
             )
         }

@@ -20,8 +20,6 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
     val selectedNote: StateFlow<Note?> = _selectedNote.asStateFlow()
 
 
-
-
     init {
         // Load initial notes when the ViewModel is created
         loadNotes()
@@ -53,11 +51,13 @@ class NoteViewModel(private val repository: NoteRepository) : ViewModel() {
 
     fun deleteNote(note: Note) {
         viewModelScope.launch {
+            val items = repository.getAll()
+            val index = items.indexOf(note)
+            if ( index + 1 < items.size) selectNote(items[index+1]) //Select the next item if it's not the last item in the list
+            else if (index > 0) selectNote(items[index-1])  //Select previous item if the item is the last one in the list
+            else selectNote(null) //If it's the only item in the list, de-select it, because it's getting deleted
             repository.delete(note)
             loadNotes() // Refresh the list after deletion
-            if (_selectedNote.value?.id == note.id) {
-                selectNote(null) // Deselect if the deleted note was selected
-            }
         }
     }
 

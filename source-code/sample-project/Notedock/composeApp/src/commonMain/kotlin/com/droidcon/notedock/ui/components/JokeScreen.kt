@@ -23,59 +23,66 @@ import kotlinx.coroutines.withContext
 
 
 const val JOKE_API_URL = "https://official-joke-api.appspot.com/random_joke"
+
 @Composable
-fun JokeScreen(modifier: Modifier = Modifier, httpClient: HttpClient){
-    val scope = rememberCoroutineScope ()
-    var jokeState: JokeResult by remember{ mutableStateOf(JokeResult.NotStarted)}
+fun JokeScreen(modifier: Modifier = Modifier, httpClient: HttpClient) {
+    val scope = rememberCoroutineScope()
+    var jokeState: JokeResult by remember { mutableStateOf(JokeResult.NotStarted) }
 
 
 
-    Column (modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Button({
             //Start loading state
             jokeState = JokeResult.Loading
 
             //Launch in the IO dispatcher for network operations
             scope.launch(Dispatchers.IO) {
-                try{
-                    val response : HttpResponse = httpClient.get(JOKE_API_URL)
-                    if (response.status.value == 200){
+                try {
+                    val response: HttpResponse = httpClient.get(JOKE_API_URL)
+                    if (response.status.value == 200) {
                         val joke = response.body<Joke>()
-                        withContext(Dispatchers.Main){
+                        withContext(Dispatchers.Main) {
                             jokeState = JokeResult.Success(joke)
                         }
-                    }
-                    else {
+                    } else {
                         jokeState = JokeResult.Error("Failed to get joke from API: ${response.status.value}")
                     }
 
-                } catch(e: Exception){
+                } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
                         jokeState = JokeResult.Error("Error during call to API: ${e.message ?: "Unknown error"}")
                     }
                 }
 
-             }
-        }, modifier = Modifier.align(Alignment.CenterHorizontally)){
+            }
+        }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
             Text("Get a random joke")
         }
 
-        when (jokeState){
+        when (jokeState) {
             is JokeResult.NotStarted -> {
                 // Do nothing
             }
+
             is JokeResult.Loading -> {
                 Text("Loading joke...", Modifier.padding(8.dp))
                 CircularProgressIndicator(modifier = Modifier.padding(8.dp).fillMaxSize(0.5f))
             }
+
             is JokeResult.Success -> {
                 val joke = (jokeState as JokeResult.Success).joke
                 Text("Setup: ${joke.setup}", modifier = Modifier.padding(8.dp))
                 Text("Punchline: ${joke.punchline}", modifier = Modifier.padding(8.dp))
             }
+
             is JokeResult.Error -> {
                 val error = (jokeState as JokeResult.Error).message
-                Text("An error occurred: $error", modifier = Modifier.padding(8.dp), color = MaterialTheme.colorScheme.error)
+                Text(
+                    "An error occurred: $error",
+                    modifier = Modifier.padding(8.dp),
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
 

@@ -15,24 +15,25 @@ import com.droidcon.notedock.ui.components.DeleteConfirmationScreen
 fun DeleteConfirmationDialog(
     note: Note, //Note to decide about deleting
     onCloseRequest: () -> Unit,
-    onConfirmDelete: (Boolean) -> Unit // Inform of the user's decision
-){
+    onConfirmDelete: (Note?) -> Unit // Inform of the user's decision
+) {
     DialogWindow(
-        title = "Confirmation",
+        title = "Warning",
         onCloseRequest = onCloseRequest,
-        onPreviewKeyEvent = {event-> //handle Esc key to close dialog
-            if (event.type == KeyEventType.KeyDown){
-                val consumed = if (event.key == Key.Escape){
+        onPreviewKeyEvent = { event -> //handle Esc key to close dialog
+            if (event.type == KeyEventType.KeyDown) {
+                val consumed = if (event.key == Key.Escape) {
                     onCloseRequest()
                     true
+                } else {
+                    false
                 }
-                else {false}
                 return@DialogWindow consumed
             }
             return@DialogWindow false
         }
 
-    ){
+    ) {
         DeleteConfirmationScreen(
             modifier = Modifier.fillMaxSize(),
             note = note,

@@ -2,6 +2,7 @@
     ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
     ExperimentalFoundationApi::class
 )
+
 package com.droidcon.notedock.ui.screens
 
 import androidx.compose.foundation.*
@@ -46,7 +47,7 @@ fun MainNotesWindow(
     httpClient: HttpClient
 ) {
 
-    var isJokeWindowOpen by remember{mutableStateOf(false)}
+    var isJokeWindowOpen by remember { mutableStateOf(false) }
     var isEditorWindowOpen by remember { mutableStateOf(false) }
     var isConfirmationDialogOpen by remember { mutableStateOf(false) }
 
@@ -55,11 +56,12 @@ fun MainNotesWindow(
         state = windowState,
         title = "Note Dock App",
         onCloseRequest = onCloseApp,
-        onPreviewKeyEvent = {event->
-            handleMainWindowKbShortcuts(event,
+        onPreviewKeyEvent = { event ->
+            handleMainWindowKbShortcuts(
+                event,
                 onOpenNewNoteWindow = { isEditorWindowOpen = true },
                 onOpenJokeWindow = { isJokeWindowOpen = true }
-                )
+            )
         }
 
     ) {
@@ -69,21 +71,22 @@ fun MainNotesWindow(
         val notes by noteViewModel.notes.collectAsState()
         val selectedNote by noteViewModel.selectedNote.collectAsState()
 
-        if (isJokeWindowOpen){
+        if (isJokeWindowOpen) {
             JokeWindow(
                 title = "Joke of the day",
                 onCloseRequest = {
-                isJokeWindowOpen = false
-            },
-                httpClient)
+                    isJokeWindowOpen = false
+                },
+                httpClient
+            )
         }
 
-        if (isEditorWindowOpen){
+        if (isEditorWindowOpen) {
             NoteEditorWindow(
                 winTitle = selectedNote?.title ?: "New Note",
                 note = selectedNote,
                 onClose = {
-                   isEditorWindowOpen = false
+                    isEditorWindowOpen = false
                 },
                 onSave = {
                     noteViewModel.saveNote(it)
@@ -92,22 +95,22 @@ fun MainNotesWindow(
             )
         }
 
-        if (isQuickNoteWindowOpen){
+        if (isQuickNoteWindowOpen) {
             QuickNoteWindow(
                 title = "Take a quick note",
                 onClose = { onCloseQuickNote() },
-                onSave = { title, content -> noteViewModel.createNewNote(title = title, content = content)}
+                onSave = { title, content -> noteViewModel.createNewNote(title = title, content = content) }
             )
         }
 
-        if (isConfirmationDialogOpen){
+        if (isConfirmationDialogOpen) {
             DeleteConfirmationDialog(
                 note = selectedNote!!,
                 onCloseRequest = {
                     isConfirmationDialogOpen = false
                 },
-                onConfirmDelete = { decision->
-                    if (decision) noteViewModel.deleteNote(selectedNote!!)
+                onConfirmDelete = { note ->
+                    note?.let { noteViewModel.deleteNote(it) }
                 }
             )
         }
@@ -116,42 +119,39 @@ fun MainNotesWindow(
             NotesScreen(
                 modifier = Modifier
                     //Use preview key event which is better suited to detect shortcuts
-                    .onPreviewKeyEvent{event ->
-                        if (event.type == KeyEventType.KeyDown){
+                    .onPreviewKeyEvent { event ->
+                        if (event.type == KeyEventType.KeyDown) {
                             println("Key event: ${event.key}")
-                            val consumedByMe = if (event.isCtrlPressed && event.key == Key.N){
+                            val consumedByMe = if (event.isCtrlPressed && event.key == Key.N) {
                                 isEditorWindowOpen = true
                                 true
-                            }
-                            else if (event.isCtrlPressed && event.isShiftPressed && event.key == Key.D){
+                            } else if (event.isCtrlPressed && event.isShiftPressed && event.key == Key.D) {
                                 isJokeWindowOpen = true
                                 true
-                            }
-                            else false
+                            } else false
                             return@onPreviewKeyEvent consumedByMe
                         }
                         return@onPreviewKeyEvent false
-                    }
-                    ,
+                    },
                 notes = notes,
                 selectedNote = selectedNote,
                 onNewNote = {
                     isEditorWindowOpen = true
                     noteViewModel.selectNote(null)
-                            },
+                },
                 onEditNote = {
                     isEditorWindowOpen = true
                     noteViewModel.selectNote(it)
-                             },
+                },
                 onDeleteNote = {
                     isConfirmationDialogOpen = true
-                               },
+                },
                 onOpenRandomJoke = {
                     isJokeWindowOpen = true
-                                   },
+                },
                 onSelectNote = { noteViewModel.selectNote(it) },
-                onSelectPrevNote = {note-> noteViewModel.selectPrevNote() },
-                onSelectNextNote = {note-> noteViewModel.selectNextNote() }
+                onSelectPrevNote = { note -> noteViewModel.selectPrevNote() },
+                onSelectNextNote = { note -> noteViewModel.selectNextNote() }
             )
 
         }

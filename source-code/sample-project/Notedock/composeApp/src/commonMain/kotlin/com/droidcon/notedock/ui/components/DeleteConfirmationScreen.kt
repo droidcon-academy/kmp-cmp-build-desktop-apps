@@ -21,11 +21,12 @@ fun DeleteConfirmationScreen(
     modifier: Modifier = Modifier,
     note: Note,
     onCloseRequest: () -> Unit,
-    onConfirmDelete: (Boolean) -> Unit
+    onConfirmDelete: (Note?) -> Unit
 ) {
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Are you sure you want to delete the note titled \"${note.title}?\"", Modifier.padding(8.dp),
+        Text(
+            "Are you sure you want to delete the note titled \"${note.title}?\"", Modifier.padding(8.dp),
             textAlign = TextAlign.Center
         )
         Text(
@@ -38,7 +39,7 @@ fun DeleteConfirmationScreen(
         Row(Modifier.fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.Center) {
             //No button
             Button({
-                onConfirmDelete(false)
+                onConfirmDelete(null)
                 onCloseRequest() //Cancel and send request for closing the dialog
             }, Modifier.padding(8.dp)) {
                 Text("No")
@@ -47,7 +48,7 @@ fun DeleteConfirmationScreen(
             //Yes button
             Button(
                 {
-                    onConfirmDelete(true)
+                    onConfirmDelete(note)
                     onCloseRequest() // Confirm and close
                 }, Modifier.padding(8.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onErrorContainer)

@@ -15,7 +15,8 @@ fun NoteEditorWindow(
 ) {
     Window(
         title = winTitle,
-        onCloseRequest = onClose) {
+        onCloseRequest = onClose
+    ) {
         NoteEditorScreen(
             note = note,
             onClose = onClose,
