@@ -24,7 +24,9 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.awt.datatransfer.DataFlavor
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -163,7 +165,6 @@ fun NoteEditorScreen(
                                 )
                             ) //Passing -1 means this is a new note rather than an edited one
                             scope.launch { snackbarHostState.showSnackbar("Created new note") }
-                            onClose() //Save and close
                         } else {
                             val edited = note.copy(title = title, content = content)
                             onSave(edited)

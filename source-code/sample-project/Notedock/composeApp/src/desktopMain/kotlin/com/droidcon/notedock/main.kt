@@ -27,6 +27,7 @@ val appHttpClient = HttpClient {
     install(ContentNegotiation) {
         json(Json { ignoreUnknownKeys = true })
     }
+
 }
 
 fun main() = application {

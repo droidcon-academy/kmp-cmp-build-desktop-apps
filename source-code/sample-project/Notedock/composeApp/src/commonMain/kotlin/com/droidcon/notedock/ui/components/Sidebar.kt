@@ -179,7 +179,7 @@ fun Sidebar(
 
                     Column {
                         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart))
+                            Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart).fillMaxWidth(0.6f))
                             TooltipArea(tooltip = {
                                 Surface(
                                     modifier = Modifier.shadow(2.dp, shape = MaterialTheme.shapes.small),
