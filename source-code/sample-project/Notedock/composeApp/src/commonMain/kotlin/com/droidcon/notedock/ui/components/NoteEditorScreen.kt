@@ -24,9 +24,7 @@ import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.awt.datatransfer.DataFlavor
 
 @OptIn(ExperimentalComposeUiApi::class)

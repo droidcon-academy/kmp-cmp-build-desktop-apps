@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Save
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,33 +37,38 @@ fun QuickNoteWindow(
         var title by remember { mutableStateOf("") }
         var content by remember { mutableStateOf("") }
 
-        MaterialTheme {
-            Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                TextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    placeholder = { Text("Note Title", Modifier.padding(8.dp)) },
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.2f).padding(8.dp)
-                        .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
+        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            TextField(
+                value = title,
+                onValueChange = { title = it },
+                placeholder = { Text("Note Title", Modifier.padding(8.dp)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.3f)
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .padding(8.dp)
 
-                )
+            )
 
-                TextField(
-                    value = content,
-                    onValueChange = { content = it },
-                    placeholder = { Text("Note content ... ", Modifier.padding(8.dp)) },
-                    modifier = Modifier.fillMaxWidth().fillMaxHeight(0.8f).padding(8.dp)
-                        .background(androidx.compose.material3.MaterialTheme.colorScheme.secondaryContainer)
+            TextField(
+                value = content,
+                onValueChange = { content = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f)
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .padding(8.dp),
+                placeholder = { Text("Note content ... ", Modifier.padding(8.dp)) }
 
-                )
 
-                Button({
-                    onSave(title, content)
-                }) {
-                    Icon(Icons.Outlined.Save, "Save", modifier = Modifier.padding(2.dp))
-                    Text("Save", Modifier.padding(8.dp))
+            )
 
-                }
+            Button({
+                onSave(title, content)
+            }) {
+                Icon(Icons.Outlined.Save, "Save", modifier = Modifier.padding(2.dp))
+                Text("Save", Modifier.padding(8.dp))
+
             }
         }
     }

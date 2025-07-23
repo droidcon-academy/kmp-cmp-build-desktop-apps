@@ -15,15 +15,12 @@ class InMemoryNoteRepository : NoteRepository {
         if (notes.isEmpty()) {
             repeat(5) { i ->
                 val id = i + 1 // Start IDs from 1
-//Create initial notes
+                //Create initial notes
                 val sentence = Utils.generateRandomSentence()
                 val title = sentence.split(' ')[0]
                 notes.add(
                     Note(
-                        id = id,
-                        title = title,
-                        content = sentence,
-                        timestamp = System.currentTimeMillis()
+                        id = id, title = title, content = sentence, timestamp = System.currentTimeMillis()
                     )
                 )
             }

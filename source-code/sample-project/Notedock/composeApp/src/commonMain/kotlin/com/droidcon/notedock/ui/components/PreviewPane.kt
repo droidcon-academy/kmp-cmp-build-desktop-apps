@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
 
 
-// We are
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PreviewPane(
