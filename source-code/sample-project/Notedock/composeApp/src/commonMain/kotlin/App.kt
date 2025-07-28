@@ -40,7 +40,10 @@ fun NotesScreen(
         modifier = modifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
-        }) { paddingValues ->
+        },
+        contentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.background),
+        containerColor = MaterialTheme.colorScheme.background
+        ) { paddingValues ->
         Row(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             // Notes List Sidebar with Scrollbar
             Sidebar(
@@ -61,7 +64,7 @@ fun NotesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.secondaryContainer, shape = MaterialTheme.shapes.extraLarge),
+                    .background(MaterialTheme.colorScheme.primaryContainer, shape = MaterialTheme.shapes.extraLarge),
                 onEditNote = onEditNote
             )
         }

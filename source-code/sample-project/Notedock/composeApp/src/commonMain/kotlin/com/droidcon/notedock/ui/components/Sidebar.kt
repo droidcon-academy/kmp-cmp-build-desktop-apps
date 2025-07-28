@@ -62,7 +62,7 @@ fun Sidebar(
             state = listState,
             contentPadding = PaddingValues(4.dp),
             modifier = Modifier.fillMaxSize().padding(8.dp)
-                .border(2.dp, MaterialTheme.colorScheme.onSurface, MaterialTheme.shapes.large)
+                .border(2.dp, MaterialTheme.colorScheme.tertiary, MaterialTheme.shapes.large)
         ) {
             //New note button
             item {
@@ -112,7 +112,7 @@ fun Sidebar(
 
                         }
                         ).background(
-                        if (note.id == selectedNote?.id) Color.LightGray else MaterialTheme.colorScheme.background,
+                        if (note.id == selectedNote?.id) MaterialTheme.colorScheme.background.copy(alpha = 0.5f) else MaterialTheme.colorScheme.background,
                         MaterialTheme.shapes.small
                     ).border(
                         1.dp,
