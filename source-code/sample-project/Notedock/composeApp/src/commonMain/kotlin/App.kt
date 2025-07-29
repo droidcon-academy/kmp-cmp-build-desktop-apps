@@ -1,7 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,9 +39,7 @@ fun NotesScreen(
         modifier = modifier,
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
-        },
-        contentColor = MaterialTheme.colorScheme.contentColorFor(MaterialTheme.colorScheme.background),
-        containerColor = MaterialTheme.colorScheme.background
+        }
         ) { paddingValues ->
         Row(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             // Notes List Sidebar with Scrollbar
@@ -64,7 +61,7 @@ fun NotesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer, shape = MaterialTheme.shapes.extraLarge),
+                ,
                 onEditNote = onEditNote
             )
         }

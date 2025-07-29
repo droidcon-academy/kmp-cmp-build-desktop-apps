@@ -2,13 +2,12 @@ package com.droidcon.notedock.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.TooltipArea
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -61,7 +60,7 @@ fun PreviewPane(
                     Text(
                         text = note.title, style = MaterialTheme.typography.headlineSmall, modifier = Modifier
                             .padding(8.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer),
+                        ,
                         textAlign = TextAlign.Center
                     )
 
@@ -71,7 +70,6 @@ fun PreviewPane(
                     Text(
                         note.content, modifier = Modifier
                             .padding(8.dp)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
 
                     )
                 }

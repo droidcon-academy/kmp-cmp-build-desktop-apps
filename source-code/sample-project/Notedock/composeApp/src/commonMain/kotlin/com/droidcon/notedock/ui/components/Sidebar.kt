@@ -8,13 +8,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -39,7 +43,6 @@ import com.droidcon.notedock.model.Note
 import com.droidcon.notedock.util.convertTimestampToDateString
 import java.awt.datatransfer.StringSelection
 
-//We put Sidebar under desktopMain because it requires desktop-specific APIs
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun Sidebar(
@@ -63,6 +66,8 @@ fun Sidebar(
             contentPadding = PaddingValues(4.dp),
             modifier = Modifier.fillMaxSize().padding(8.dp)
                 .border(2.dp, MaterialTheme.colorScheme.tertiary, MaterialTheme.shapes.large)
+
+
         ) {
             //New note button
             item {
@@ -82,6 +87,7 @@ fun Sidebar(
                 }
             }
 
+            //Random joke button
             item {
                 TooltipArea(tooltip = {
                     Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
@@ -109,14 +115,13 @@ fun Sidebar(
                         //Select if not already selected, otherwise de-select
                         if (note.id == selectedNote?.id) onSelectNote(null)
                         else onSelectNote(note)
-
                         }
                         ).background(
                         if (note.id == selectedNote?.id) MaterialTheme.colorScheme.background.copy(alpha = 0.5f) else MaterialTheme.colorScheme.background,
                         MaterialTheme.shapes.small
                     ).border(
                         1.dp,
-                        if (hoverOffset == index) Color.Red else Color.Transparent,
+                        if (hoverOffset == index) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant,
                         shape = MaterialTheme.shapes.medium
                     ).padding(8.dp).onPointerEvent(PointerEventType.Enter) {
                         println("PointerEventType.Enter")
@@ -179,7 +184,11 @@ fun Sidebar(
 
                     Column {
                         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Text(text = note.title, modifier = Modifier.padding(4.dp).align(Alignment.CenterStart).fillMaxWidth(0.6f))
+                            Text(text = note.title, modifier = Modifier
+                                .padding(4.dp)
+                                .align(Alignment.CenterStart)
+                                .fillMaxWidth(0.6f),
+                            )
                             TooltipArea(tooltip = {
                                 Surface(
                                     modifier = Modifier.shadow(2.dp, shape = MaterialTheme.shapes.small),
@@ -197,7 +206,7 @@ fun Sidebar(
                                     onSelectNote(note) //Select if not already selected
                                     onDeleteNote(note)
                                 }) {
-                                    Icon(Icons.Outlined.Delete, "Delete")
+                                    Icon(Icons.Outlined.Delete, "Delete", tint = MaterialTheme.colorScheme.onBackground)
                                 }
                             }
                         }
@@ -225,7 +234,7 @@ fun Sidebar(
                         }
                         Text(
                             text = convertTimestampToDateString(note.timestamp, "MM/dd/yyyy HH:mm:ss"),
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
                         )
                     }
                 }

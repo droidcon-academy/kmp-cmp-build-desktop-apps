@@ -1,15 +1,16 @@
 package com.droidcon.notedock.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.draganddrop.dragAndDropTarget
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -94,7 +95,6 @@ fun NoteEditorScreen(
                 .padding(16.dp)
                 .fillMaxWidth()
                 .fillMaxHeight(0.7f)
-                .background(MaterialTheme.colorScheme.secondaryContainer)
                 .onPreviewKeyEvent { event ->
                     if (event.type == KeyEventType.KeyDown && event.key == Key.Tab) {
                         if (event.isShiftPressed) {
@@ -118,7 +118,6 @@ fun NoteEditorScreen(
                 label = { Text("Title") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
                     .focusRestorer(titleFocusRequester)
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -132,7 +131,6 @@ fun NoteEditorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f) // Makes it expandable
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
                     .dragAndDropTarget(shouldStartDragAndDrop = { true }, target = dragAndDropTarget)
                     .focusRequester(contentFocusRequester)
 

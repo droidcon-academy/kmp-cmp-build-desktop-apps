@@ -1,9 +1,7 @@
 package com.droidcon.notedock.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,7 +28,7 @@ fun DeleteConfirmationScreen(
             textAlign = TextAlign.Center
         )
         Text(
-            note.content, Modifier.padding(16.dp).background(MaterialTheme.colorScheme.secondaryContainer),
+            note.content, Modifier.padding(16.dp),
             maxLines = 2, overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Bold
@@ -50,8 +48,7 @@ fun DeleteConfirmationScreen(
                 {
                     onConfirmDelete(note)
                     onCloseRequest() // Confirm and close
-                }, Modifier.padding(8.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onErrorContainer)
+                }, Modifier.padding(8.dp)
             ) {
                 Text("Yes")
             }
