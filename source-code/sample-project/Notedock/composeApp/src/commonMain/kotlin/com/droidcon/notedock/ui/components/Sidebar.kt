@@ -117,7 +117,7 @@ fun Sidebar(
                         else onSelectNote(note)
                         }
                         ).background(
-                        if (note.id == selectedNote?.id) MaterialTheme.colorScheme.background.copy(alpha = 0.5f) else MaterialTheme.colorScheme.background,
+                        if (note.id == selectedNote?.id) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background,
                         MaterialTheme.shapes.small
                     ).border(
                         1.dp,

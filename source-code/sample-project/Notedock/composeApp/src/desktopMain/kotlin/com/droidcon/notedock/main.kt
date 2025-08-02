@@ -13,19 +13,29 @@ import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import com.droidcon.notedock.ui.screens.MainNotesWindow
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.engine.ProxyBuilder
+import io.ktor.client.engine.cio.CIO
 import org.jetbrains.compose.resources.painterResource
 import notedock.composeapp.generated.resources.Res
 import notedock.composeapp.generated.resources.notedock_icon
 
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.Url
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 
 // Define shared HttpClient instance at the top level
-val appHttpClient = HttpClient {
+val appHttpClient = HttpClient(CIO) {
     install(ContentNegotiation) {
         json(Json { ignoreUnknownKeys = true })
+    }
+
+    //Remove engine proxy block below if not needed
+    engine {
+        proxy = ProxyBuilder.http(Url("http://127.0.0.1:9910"))
     }
 
 }
