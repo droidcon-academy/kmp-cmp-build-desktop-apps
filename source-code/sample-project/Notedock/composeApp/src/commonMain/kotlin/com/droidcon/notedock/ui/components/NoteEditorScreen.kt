@@ -137,9 +137,8 @@ fun NoteEditorScreen(
 
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
-
-
+            Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth())
+            {
                 Button(
                     onClick = onClose,
                     modifier = Modifier
@@ -160,7 +159,13 @@ fun NoteEditorScreen(
                                     content = content
                                 )
                             ) //Passing -1 means this is a new note rather than an edited one
-                            scope.launch { snackbarHostState.showSnackbar("Created new note") }
+
+                            //Show success message and then close the editor window
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Created new note")
+                                onClose()
+                            }
+
                         } else {
                             val edited = note.copy(title = title, content = content)
                             onSave(edited)
