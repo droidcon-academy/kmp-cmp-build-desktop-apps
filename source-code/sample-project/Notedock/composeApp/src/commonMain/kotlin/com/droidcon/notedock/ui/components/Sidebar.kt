@@ -56,193 +56,209 @@ fun Sidebar(
     onSelectPrevNote: (Note) -> Unit,
     onSelectNextNote: (Note) -> Unit
 ) {
+
+    //The following scroll state will be used in combination with the VerticalScrollbar Desktop component
+    val scrollState = rememberScrollState()
+    val textMeasurer = rememberTextMeasurer()
+    var hoverOffset by remember { mutableStateOf(-1) }
+
     Box(modifier) {
-        val listState = rememberLazyListState()
-        val textMeasurer = rememberTextMeasurer()
-        var hoverOffset by remember { mutableStateOf(-1) }
-
-        LazyColumn(
-            state = listState,
-            contentPadding = PaddingValues(4.dp),
-            modifier = Modifier.fillMaxSize().padding(8.dp)
-                .border(2.dp, MaterialTheme.colorScheme.tertiary, MaterialTheme.shapes.large)
-
-
+        Column(Modifier
+            .verticalScroll(scrollState) //Apply vertical scroll modifier
+            .fillMaxSize()
         ) {
+
             //New note button
-            item {
-                TooltipArea(tooltip = {
-                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
-                        Text(
-                            "Create a new note (Ctrl + N)",
-                            Modifier.padding(4.dp),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }, delayMillis = 500) {
-                    Button({ onNewNote() }, modifier = Modifier.padding(8.dp)) {
-                        Icon(Icons.Outlined.Add, contentDescription = "Add")
-                        Text("New Note")
-                    }
+            TooltipArea(tooltip = {
+                Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
+                    Text(
+                        "Create a new note (Ctrl + N)",
+                        Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }, delayMillis = 500) {
+                Button({ onNewNote() }, modifier = Modifier.padding(8.dp)) {
+                    Icon(Icons.Outlined.Add, contentDescription = "Add")
+                    Text("New Note")
                 }
             }
 
             //Random joke button
-            item {
-                TooltipArea(tooltip = {
-                    Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
-                        Text(
-                            "Get a random joke from server (Ctrl + Shift + D)",
-                            Modifier.padding(4.dp),
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }, delayMillis = 500) {
-                    Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)) {
-                        Icon(Icons.Outlined.CalendarToday, "Today")
-                        Text("Random Joke", Modifier.padding(8.dp))
-                    }
+            TooltipArea(tooltip = {
+                Surface(Modifier.shadow(elevation = 4.dp, shape = MaterialTheme.shapes.small)) {
+                    Text(
+                        "Get a random joke from server (Ctrl + Shift + D)",
+                        Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }, delayMillis = 500) {
+                Button({ onOpenRandomJoke() }, modifier = Modifier.padding(8.dp)) {
+                    Icon(Icons.Outlined.CalendarToday, "Today")
+                    Text("Random Joke", Modifier.padding(8.dp))
                 }
             }
 
-            item { Spacer(Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colorScheme.onSurfaceVariant)) }
-            itemsIndexed(items = notes, key = { index: Int, note: Note -> note.id }) { index, note ->
+            Spacer(
+                Modifier.height(2.dp).fillMaxWidth().background(MaterialTheme.colorScheme.onSurfaceVariant)
+            )
 
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .clickable(onClick = {
-                        //Select if not already selected, otherwise de-select
-                        if (note.id == selectedNote?.id) onSelectNote(null)
-                        else onSelectNote(note)
-                        }
-                        ).background(
-                        if (note.id == selectedNote?.id) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background,
-                        MaterialTheme.shapes.small
-                    ).border(
-                        1.dp,
-                        if (hoverOffset == index) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant,
-                        shape = MaterialTheme.shapes.medium
-                    ).padding(8.dp).onPointerEvent(PointerEventType.Enter) {
-                        println("PointerEventType.Enter")
-                        hoverOffset = index
-                    }.onPointerEvent(PointerEventType.Exit) {
-                        println("PointerEventType.Exit")
-                        hoverOffset = -1
-                    }.dragAndDropSource(
-                        drawDragDecoration = {
-                            drawRect(
-                                color = Color.Gray, topLeft = Offset(0f, 0f), size = Size(size.width, size.height)
-                            )
-                            val textLayoutResult = textMeasurer.measure(
-                                text = AnnotatedString(note.content),
-                                layoutDirection = layoutDirection,
-                                density = this
-                            )
+            LazyColumn(
+                contentPadding = PaddingValues(4.dp),
+                modifier = Modifier.fillMaxWidth().height(750.dp).padding(8.dp)
+                    .border(2.dp, MaterialTheme.colorScheme.tertiary, MaterialTheme.shapes.large)
 
-                            drawText(
-                                textLayoutResult = textLayoutResult, topLeft = Offset(20f, 20f)
-                            )
 
-                        }) { offset ->
-                        DragAndDropTransferData(
-                            transferable = DragAndDropTransferable(
-                                StringSelection(note.content)
-                            ), supportedActions = listOf(
-                                DragAndDropTransferAction.Copy,
-                                DragAndDropTransferAction.Move,
-                                DragAndDropTransferAction.Link
-                            ), dragDecorationOffset = offset, onTransferCompleted = {
-                                println("Action at source: $it")
-                            })
-                    }.onKeyEvent { event -> //Handles note selection with up/down keys
+            ) {
 
-                        if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
-                            selectedNote?.let {
-                                val handled = when (event.key) {
-                                    Key.DirectionUp -> {
-                                        onSelectPrevNote(selectedNote); true
-                                    }
+                itemsIndexed(items = notes, key = { index: Int, note: Note -> note.id }) { index, note ->
 
-                                    Key.DirectionDown -> {
-                                        onSelectNextNote(selectedNote); true
-                                    }
-
-                                    Key.Delete, Key.Backspace -> {
-                                        onDeleteNote(selectedNote); true
-                                    }
-
-                                    else -> false
-                                }
-                                if (handled) return@onKeyEvent true
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable(onClick = {
+                                //Select if not already selected, otherwise de-select
+                                if (note.id == selectedNote?.id) onSelectNote(null)
+                                else onSelectNote(note)
                             }
-                            true // Important! Ensures the key event is not consumed multiple times
-                        } else false // If it's not a KeyDown, or selected note is null or the key was not handled by us, propagate it
-                    }
+                            ).background(
+                                if (note.id == selectedNote?.id) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background,
+                                MaterialTheme.shapes.small
+                            ).border(
+                                1.dp,
+                                if (hoverOffset == index) Color.Red else MaterialTheme.colorScheme.onSurfaceVariant,
+                                shape = MaterialTheme.shapes.medium
+                            ).padding(8.dp).onPointerEvent(PointerEventType.Enter) {
+                                println("PointerEventType.Enter")
+                                hoverOffset = index
+                            }.onPointerEvent(PointerEventType.Exit) {
+                                println("PointerEventType.Exit")
+                                hoverOffset = -1
+                            }.dragAndDropSource(
+                                drawDragDecoration = {
+                                    drawRect(
+                                        color = Color.Gray,
+                                        topLeft = Offset(0f, 0f),
+                                        size = Size(size.width, size.height)
+                                    )
+                                    val textLayoutResult = textMeasurer.measure(
+                                        text = AnnotatedString(note.content),
+                                        layoutDirection = layoutDirection,
+                                        density = this
+                                    )
 
-                ) {
+                                    drawText(
+                                        textLayoutResult = textLayoutResult, topLeft = Offset(20f, 20f)
+                                    )
 
-                    Column {
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            Text(text = note.title, modifier = Modifier
-                                .padding(4.dp)
-                                .align(Alignment.CenterStart)
-                                .fillMaxWidth(0.6f),
-                            )
+                                }) { offset ->
+                                DragAndDropTransferData(
+                                    transferable = DragAndDropTransferable(
+                                        StringSelection(note.content)
+                                    ), supportedActions = listOf(
+                                        DragAndDropTransferAction.Copy,
+                                        DragAndDropTransferAction.Move,
+                                        DragAndDropTransferAction.Link
+                                    ), dragDecorationOffset = offset, onTransferCompleted = {
+                                        println("Action at source: $it")
+                                    })
+                            }.onKeyEvent { event -> //Handles note selection with up/down keys
+
+                                if (event.type == KeyEventType.KeyDown) {  // Select next and previous notes
+                                    selectedNote?.let {
+                                        val handled = when (event.key) {
+                                            Key.DirectionUp -> {
+                                                onSelectPrevNote(selectedNote); true
+                                            }
+
+                                            Key.DirectionDown -> {
+                                                onSelectNextNote(selectedNote); true
+                                            }
+
+                                            Key.Delete, Key.Backspace -> {
+                                                onDeleteNote(selectedNote); true
+                                            }
+
+                                            else -> false
+                                        }
+                                        if (handled) return@onKeyEvent true
+                                    }
+                                    true // Important! Ensures the key event is not consumed multiple times
+                                } else false // If it's not a KeyDown, or selected note is null or the key was not handled by us, propagate it
+                            }
+
+                    ) {
+
+                        Column {
+                            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = note.title,
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .align(Alignment.CenterStart)
+                                        .fillMaxWidth(0.6f),
+                                )
+                                TooltipArea(tooltip = {
+                                    Surface(
+                                        modifier = Modifier.shadow(2.dp, shape = MaterialTheme.shapes.small),
+                                        color = TooltipDefaults.plainTooltipContainerColor,
+                                        contentColor = TooltipDefaults.plainTooltipContentColor
+                                    ) {
+                                        Text(
+                                            "Delete this note (Del)",
+                                            Modifier.padding(8.dp),
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
+                                }, modifier = Modifier.padding(4.dp).align(Alignment.CenterEnd)) {
+                                    IconButton({
+                                        onSelectNote(note) //Select if not already selected
+                                        onDeleteNote(note)
+                                    }) {
+                                        Icon(
+                                            Icons.Outlined.Delete,
+                                            "Delete",
+                                            tint = MaterialTheme.colorScheme.onBackground
+                                        )
+                                    }
+                                }
+                            }
                             TooltipArea(tooltip = {
                                 Surface(
-                                    modifier = Modifier.shadow(2.dp, shape = MaterialTheme.shapes.small),
-                                    color = TooltipDefaults.plainTooltipContainerColor,
-                                    contentColor = TooltipDefaults.plainTooltipContentColor
+                                    Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small),
+                                    contentColor = TooltipDefaults.plainTooltipContentColor,
+                                    color = TooltipDefaults.plainTooltipContainerColor
                                 ) {
-                                    Text(
-                                        "Delete this note (Del)",
-                                        Modifier.padding(8.dp),
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
+                                    if (hoverOffset == index) {
+                                        Text(
+                                            "${note.content.take(50)}...\nHold and drag to copy text to another window",
+                                            modifier = Modifier.padding(8.dp),
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
                                 }
-                            }, modifier = Modifier.padding(4.dp).align(Alignment.CenterEnd)) {
-                                IconButton({
-                                    onSelectNote(note) //Select if not already selected
-                                    onDeleteNote(note)
-                                }) {
-                                    Icon(Icons.Outlined.Delete, "Delete", tint = MaterialTheme.colorScheme.onBackground)
-                                }
+                            }, delayMillis = 500) {
+                                Text(
+                                    text = note.content,
+                                    modifier = Modifier.padding(4.dp),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
                             }
-                        }
-                        TooltipArea(tooltip = {
-                            Surface(
-                                Modifier.shadow(4.dp, shape = MaterialTheme.shapes.small),
-                                contentColor = TooltipDefaults.plainTooltipContentColor,
-                                color = TooltipDefaults.plainTooltipContainerColor
-                            ) {
-                                if (hoverOffset == index) {
-                                    Text(
-                                        "${note.content.take(50)}...\nHold and drag to copy text to another window",
-                                        modifier = Modifier.padding(8.dp),
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                }
-                            }
-                        }, delayMillis = 500) {
                             Text(
-                                text = note.content,
-                                modifier = Modifier.padding(4.dp),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                                text = convertTimestampToDateString(note.timestamp, "MM/dd/yyyy HH:mm:ss"),
+                                style = MaterialTheme.typography.labelSmall,
                             )
                         }
-                        Text(
-                            text = convertTimestampToDateString(note.timestamp, "MM/dd/yyyy HH:mm:ss"),
-                            style = MaterialTheme.typography.labelSmall,
-                        )
                     }
                 }
             }
         }
 
         VerticalScrollbar(
-            adapter = ScrollbarAdapter(listState)
+            modifier = Modifier.align(Alignment.CenterEnd).fillMaxHeight(),
+            adapter = rememberScrollbarAdapter(scrollState)
         )
 
     }

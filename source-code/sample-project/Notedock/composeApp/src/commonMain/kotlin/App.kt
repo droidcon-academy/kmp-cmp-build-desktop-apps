@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,6 +62,9 @@ fun NotesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
+                    .background(
+                        if (selectedNote != null) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.background
+                    )
                 ,
                 onEditNote = onEditNote
             )
