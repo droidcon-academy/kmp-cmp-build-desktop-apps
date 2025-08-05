@@ -5,7 +5,8 @@
 
 package com.droidcon.notedock.ui.screens
 
-import androidx.compose.foundation.*
+import NotesScreen
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -14,23 +15,11 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.rememberWindowState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.droidcon.notedock.repository.InMemoryNoteRepository
-import com.droidcon.notedock.viewmodel.NoteViewModel
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.type
-
-import NotesScreen
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.isCtrlPressed
-import androidx.compose.ui.input.key.isShiftPressed
-import androidx.compose.ui.input.key.onPreviewKeyEvent
 import com.droidcon.notedock.ui.theme.NotedockTheme
 import com.droidcon.notedock.util.handleMainWindowKbShortcuts
-import io.ktor.client.HttpClient
+import com.droidcon.notedock.viewmodel.NoteViewModel
+import io.ktor.client.*
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 
 @OptIn(ExperimentalResourceApi::class)
