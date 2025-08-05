@@ -52,7 +52,7 @@ fun MainNotesWindow(
             state = windowState,
             title = "Note Dock App",
             onCloseRequest = onCloseApp,
-            onPreviewKeyEvent = { event ->
+            onPreviewKeyEvent = { event -> //Handle window-level keyboard shortcuts
                 handleMainWindowKbShortcuts(
                     event,
                     onOpenNewNoteWindow = { isEditorWindowOpen = true },
@@ -112,22 +112,6 @@ fun MainNotesWindow(
             }
 
             NotesScreen(
-                modifier = Modifier
-                    //Use preview key event which is better suited to detect shortcuts
-                    .onPreviewKeyEvent { event ->
-                        if (event.type == KeyEventType.KeyDown) {
-                            println("Key event: ${event.key}")
-                            val consumedByMe = if (event.isCtrlPressed && event.key == Key.N) {
-                                isEditorWindowOpen = true
-                                true
-                            } else if (event.isCtrlPressed && event.isShiftPressed && event.key == Key.D) {
-                                isJokeWindowOpen = true
-                                true
-                            } else false
-                            return@onPreviewKeyEvent consumedByMe
-                        }
-                        return@onPreviewKeyEvent false
-                    },
                 notes = notes,
                 selectedNote = selectedNote,
                 onNewNote = {

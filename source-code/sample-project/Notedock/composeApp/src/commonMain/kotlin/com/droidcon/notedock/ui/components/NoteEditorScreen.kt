@@ -163,7 +163,6 @@ fun NoteEditorScreen(
                             //Show success message and then close the editor window
                             scope.launch {
                                 snackbarHostState.showSnackbar("Created new note")
-                                onClose()
                             }
 
                         } else {
