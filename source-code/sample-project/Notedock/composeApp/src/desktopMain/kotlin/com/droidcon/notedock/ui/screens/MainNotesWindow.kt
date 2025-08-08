@@ -5,7 +5,6 @@
 
 package com.droidcon.notedock.ui.screens
 
-import NotesScreen
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
@@ -15,6 +14,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.rememberWindowState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.droidcon.notedock.repository.InMemoryNoteRepository
+import com.droidcon.notedock.ui.components.NotesScreen
 import com.droidcon.notedock.ui.theme.NotedockTheme
 import com.droidcon.notedock.util.handleMainWindowKbShortcuts
 import com.droidcon.notedock.viewmodel.NoteViewModel

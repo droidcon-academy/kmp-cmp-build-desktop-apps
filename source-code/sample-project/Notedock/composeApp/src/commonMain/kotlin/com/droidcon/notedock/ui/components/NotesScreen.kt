@@ -1,20 +1,19 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+package com.droidcon.notedock.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.droidcon.notedock.model.Note
-import com.droidcon.notedock.ui.components.PreviewPane
-import com.droidcon.notedock.ui.components.Sidebar
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -41,7 +40,7 @@ fun NotesScreen(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
         }
-        ) { paddingValues ->
+    ) { paddingValues ->
         Row(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             // Notes List Sidebar with Scrollbar
             Sidebar(
